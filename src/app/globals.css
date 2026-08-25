@@ -1,26 +1,385 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ============================================================
+   FluxWeb: sistema de diseño
+   Marca: verde oliva #67683D + crema #F0E9D6 (extraídos del logotipo).
+   Un solo acento en toda la página. Un solo sistema de radios:
+     · botones y chips → pill
+     · paneles y media → 20px (24px en piezas grandes)
+     · inputs → 12px
+   ============================================================ */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* La variante dark cubre el tema elegido a mano y el del sistema. */
+@custom-variant dark {
+  &:where([data-theme="dark"], [data-theme="dark"] *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme="light"]) *) {
+      @slot;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+:root {
+  color-scheme: light;
+
+  /* superficies */
+  --paper: #f0e9d6;
+  --paper-raise: #f7f2e4;
+  --paper-sink: #e5dcc4;
+
+  /* texto */
+  --ink: #1b1c12;
+  --ink-soft: #3a3c2b;
+  --muted: #5c5e43;
+
+  /* líneas */
+  --line: rgba(27, 28, 18, 0.14);
+  --line-strong: rgba(27, 28, 18, 0.28);
+
+  /* acento de marca */
+  --accent: #67683d;
+  --accent-strong: #4e4f2d;
+  --accent-soft: rgba(103, 104, 61, 0.1);
+  --accent-ink: #f7f2e2;
+  /* El oliva de marca sobre crema queda en 4.7:1. Para texto chico se usa
+     esta variante, que supera 5:1 tanto sobre crema como sobre crema profunda. */
+  --accent-text: #5a5b34;
+
+  /* profundidad */
+  --shadow-sm: 0 1px 2px rgba(27, 28, 18, 0.06);
+  --shadow-md: 0 12px 30px -12px rgba(27, 28, 18, 0.24);
+  --shadow-lg: 0 40px 80px -40px rgba(27, 28, 18, 0.42);
+
+  /* radios */
+  --r-input: 12px;
+  --r-panel: 20px;
+  --r-xl: 24px;
+
+  /* estado */
+  --danger: #8f2d1c;
+  --danger-soft: rgba(143, 45, 28, 0.08);
+
+  --grain-opacity: 0.05;
+}
+
+:root:not([data-theme="light"]) {
+  @media (prefers-color-scheme: dark) {
+    color-scheme: dark;
+    --paper: #14150e;
+    --paper-raise: #1e1f16;
+    --paper-sink: #0d0e08;
+    --ink: #f0e9d6;
+    --ink-soft: #ddd6c0;
+    --muted: #9fa189;
+    --line: rgba(240, 233, 214, 0.14);
+    --line-strong: rgba(240, 233, 214, 0.3);
+    --accent: #b9bd7a;
+    --accent-strong: #cdd18d;
+    --accent-soft: rgba(185, 189, 122, 0.12);
+    --accent-ink: #14150e;
+    --accent-text: #b9bd7a;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 12px 30px -12px rgba(0, 0, 0, 0.6);
+    --shadow-lg: 0 40px 80px -40px rgba(0, 0, 0, 0.8);
+    --danger: #f0a08c;
+    --danger-soft: rgba(240, 160, 140, 0.12);
+    --grain-opacity: 0.07;
+  }
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #14150e;
+  --paper-raise: #1e1f16;
+  --paper-sink: #0d0e08;
+  --ink: #f0e9d6;
+  --ink-soft: #ddd6c0;
+  --muted: #9fa189;
+  --line: rgba(240, 233, 214, 0.14);
+  --line-strong: rgba(240, 233, 214, 0.3);
+  --accent: #b9bd7a;
+  --accent-strong: #cdd18d;
+  --accent-soft: rgba(185, 189, 122, 0.12);
+  --accent-ink: #14150e;
+  --accent-text: #b9bd7a;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 12px 30px -12px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 40px 80px -40px rgba(0, 0, 0, 0.8);
+  --danger: #f0a08c;
+  --danger-soft: rgba(240, 160, 140, 0.12);
+  --grain-opacity: 0.07;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-raise: var(--paper-raise);
+  --color-paper-sink: var(--paper-sink);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-text: var(--accent-text);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+
+  --font-display: var(--font-playfair), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --radius-input: var(--r-input);
+  --radius-panel: var(--r-panel);
+  --radius-xl: var(--r-xl);
+
+  --shadow-soft: var(--shadow-md);
+  --shadow-deep: var(--shadow-lg);
+
+  --ease-out-quint: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* Los títulos display usan el serif del logotipo FluxWeb. */
+  .font-display {
+    font-feature-settings: "kern" 1, "liga" 1;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  hr {
+    border-color: var(--line);
+  }
+}
+
+@layer utilities {
+  /* Escalas tipográficas fluidas: una sola fuente de verdad para el display. */
+  .text-display-xl {
+    font-size: clamp(2.7rem, 7vw, 6rem);
+    line-height: 0.98;
+    letter-spacing: -0.022em;
+  }
+
+  /* Escala exclusiva del hero: se calcula para que cada línea entre entera. */
+  .text-hero {
+    font-size: clamp(2rem, 5.2vw, 4.25rem);
+    line-height: 1.02;
+    letter-spacing: -0.024em;
+  }
+
+  .text-display-lg {
+    font-size: clamp(2.1rem, 4.6vw, 3.9rem);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+  }
+
+  .text-display-md {
+    font-size: clamp(1.6rem, 3vw, 2.5rem);
+    line-height: 1.12;
+    letter-spacing: -0.015em;
+  }
+
+  .text-eyebrow {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* Reserva de descendentes para palabras en itálica dentro de titulares. */
+  .italic-safe {
+    font-style: italic;
+    line-height: 1.12;
+    padding-bottom: 0.08em;
+  }
+
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 0% 1px;
+    transition: background-size 0.4s var(--ease-out-quint);
+  }
+
+  .link-underline:hover,
+  .link-underline:focus-visible {
+    background-size: 100% 1px;
+  }
+
+  .surface-panel {
+    background-color: var(--paper-raise);
+    border: 1px solid var(--line);
+    border-radius: var(--r-panel);
+  }
+
+  .hairline-top {
+    border-top: 1px solid var(--line);
+  }
+}
+
+/* Grano de papel: capa fija, sin repintados durante el scroll. */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+}
+
+[data-theme="dark"] .grain {
+  mix-blend-mode: screen;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .grain {
+    mix-blend-mode: screen;
+  }
+}
+
+/* Accesibilidad: sin movimiento decorativo si el sistema lo pide. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Movimiento de entrada ----------
+   El estado oculto solo existe cuando hay JavaScript (<html class="js">).
+   Así, si el script falla o todavía no cargó, el contenido se lee igual. */
+.reveal {
+  opacity: 1;
+}
+
+html.js .reveal {
+  opacity: 0;
+  transform: translate3d(0, var(--reveal-distance, 22px), 0);
+  transition:
+    opacity 0.75s var(--ease-out-quint) var(--reveal-delay, 0s),
+    transform 0.75s var(--ease-out-quint) var(--reveal-delay, 0s);
+}
+
+html.js .reveal[data-in="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+.rise {
+  display: block;
+}
+
+/* Entrada de la primera pantalla: solo transforma, nunca oculta.
+   Si se animara la opacidad, el LCP esperaría a que termine la animación. */
+html.js .rise {
+  animation: rise-in 0.9s var(--ease-out-quint) both;
+  animation-delay: var(--rise-delay, 0s);
+}
+
+@keyframes rise-in {
+  from {
+    transform: translate3d(0, 20px, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.mask-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+
+.mask-line > span {
+  display: block;
+}
+
+html.js .mask-line > span {
+  animation: mask-up 1s var(--ease-out-quint) both;
+  animation-delay: var(--mask-delay, 0s);
+}
+
+@keyframes mask-up {
+  from {
+    transform: translate3d(0, 108%, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  html.js .mask-line > span,
+  html.js .rise {
+    animation: none;
+  }
+}
+
+/* Acordeón de preguntas: la respuesta entra desde arriba al abrirse. */
+@keyframes faq-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+details[open] > .faq-body {
+  animation: faq-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
