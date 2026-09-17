@@ -3,9 +3,8 @@ import { BrandPattern } from "@/components/brand/brand-pattern";
 import { Logo } from "@/components/brand/logo";
 import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
-import { services } from "@/lib/site";
-
-const [sitios, tiendas, automatizacion, mantenimiento, marca] = services;
+import { SpotlightGrid } from "@/components/ui/spotlight-grid";
+import { getContent } from "@/lib/i18n/server";
 
 function Points({
   items,
@@ -26,7 +25,9 @@ function Points({
               tone === "inverted" ? "text-accent-ink" : "text-accent"
             }`}
           />
-          <span className={tone === "inverted" ? "text-accent-ink" : "text-muted"}>
+          <span
+            className={tone === "inverted" ? "text-accent-ink" : "text-muted"}
+          >
             {item}
           </span>
         </li>
@@ -35,24 +36,29 @@ function Points({
   );
 }
 
-export function Services() {
+export async function Services() {
+  const { t, services } = await getContent();
+  const [sitios, tiendas, automatizacion, mantenimiento, marca] = services;
+
   return (
     <section id="servicios" className="scroll-mt-24 pb-24 sm:pb-32 lg:pb-40">
       <Container size="wide">
         <Reveal className="max-w-[52ch]">
-          <p className="text-eyebrow">Qué hacemos</p>
+          <p className="text-eyebrow">{t.services.eyebrow}</p>
           <h2 className="mt-4 font-display text-display-lg font-medium text-ink">
-            Todo lo que tu negocio necesita en pantalla.
+            {t.services.title}
           </h2>
         </Reveal>
 
-        <div className="mt-14 grid grid-cols-1 gap-4 md:grid-cols-12 lg:mt-16">
+        <SpotlightGrid className="mt-14 grid grid-cols-1 gap-4 md:grid-cols-12 lg:mt-16">
           {/* Servicio principal: trama de marca de fondo. */}
           <Reveal
             as="article"
-            className="surface-panel relative isolate overflow-hidden p-8 md:col-span-7 md:row-span-2 lg:p-10"
+            data-spotlight
+            id="servicio-sitios"
+            className="spotlight-card surface-panel relative isolate scroll-mt-28 overflow-hidden p-8 md:col-span-7 md:row-span-2 lg:p-10"
           >
-            <BrandPattern className="text-accent" size={176} opacity={0.055} />
+            <BrandPattern className="text-accent" size={200} opacity={0.04} />
             <div className="relative flex h-full flex-col">
               <h3 className="font-display text-3xl font-medium text-ink lg:text-4xl">
                 {sitios.title}
@@ -62,8 +68,8 @@ export function Services() {
               </p>
               <Points items={[...sitios.points]} />
               <p className="mt-auto pt-10 text-sm text-muted">
-                Cada proyecto se programa desde cero: sin constructores visuales,
-                sin código heredado que nadie entiende.
+                Cada proyecto se programa desde cero: sin constructores
+                visuales, sin código heredado que nadie entiende.
               </p>
             </div>
           </Reveal>
@@ -71,21 +77,26 @@ export function Services() {
           <Reveal
             as="article"
             delay={0.06}
-            className="surface-panel p-8 md:col-span-5 lg:p-9"
+            data-spotlight
+            id="servicio-tiendas"
+            className="spotlight-card surface-panel relative isolate scroll-mt-28 overflow-hidden p-8 md:col-span-5 lg:p-9"
           >
-            <h3 className="font-display text-2xl font-medium text-ink lg:text-3xl">
-              {tiendas.title}
-            </h3>
-            <p className="mt-4 text-[1.0625rem] leading-relaxed text-muted">
-              {tiendas.body}
-            </p>
+            <div className="relative">
+              <h3 className="font-display text-2xl font-medium text-ink lg:text-3xl">
+                {tiendas.title}
+              </h3>
+              <p className="mt-4 text-[1.0625rem] leading-relaxed text-muted">
+                {tiendas.body}
+              </p>
+            </div>
           </Reveal>
 
           {/* Bloque de color: da respiro y marca el acento en la grilla. */}
           <Reveal
             as="article"
             delay={0.12}
-            className="rounded-[var(--r-panel)] bg-accent p-8 text-accent-ink md:col-span-5 lg:p-9"
+            id="servicio-automatizacion"
+            className="scroll-mt-28 rounded-[var(--r-panel)] bg-accent p-8 text-accent-ink md:col-span-5 lg:p-9"
           >
             <h3 className="font-display text-2xl font-medium lg:text-3xl">
               {automatizacion.title}
@@ -99,7 +110,9 @@ export function Services() {
           <Reveal
             as="article"
             delay={0.06}
-            className="surface-panel relative isolate overflow-hidden p-8 md:col-span-6 lg:p-9"
+            data-spotlight
+            id="servicio-mantenimiento"
+            className="spotlight-card surface-panel relative isolate scroll-mt-28 overflow-hidden p-8 md:col-span-6 lg:p-9"
           >
             <div
               aria-hidden="true"
@@ -118,7 +131,9 @@ export function Services() {
           <Reveal
             as="article"
             delay={0.12}
-            className="surface-panel relative isolate overflow-hidden p-8 md:col-span-6 lg:p-9"
+            data-spotlight
+            id="servicio-marca"
+            className="spotlight-card surface-panel relative isolate scroll-mt-28 overflow-hidden p-8 md:col-span-6 lg:p-9"
           >
             <Logo
               variant="mark"
@@ -134,7 +149,7 @@ export function Services() {
               </p>
             </div>
           </Reveal>
-        </div>
+        </SpotlightGrid>
       </Container>
     </section>
   );

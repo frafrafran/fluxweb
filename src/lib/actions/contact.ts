@@ -2,7 +2,9 @@
 
 import { headers } from "next/headers";
 import type { ContactState } from "@/lib/contact-state";
-import { projectTypes, site } from "@/lib/site";
+import { site } from "@/lib/site";
+import { defaultLocale, hasLocale } from "@/lib/i18n/config";
+import { dictionaries, fill } from "@/lib/i18n/content";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
 
@@ -34,9 +36,17 @@ export async function submitContact(
   _prev: ContactState,
   formData: FormData,
 ): Promise<ContactState> {
+  /* El idioma viene en un campo oculto: las Server Actions no pueden leer el
+     segmento de la ruta. Si falta o no es válido, se responde en español. */
+  const langValue = clean(formData.get("lang"), 5);
+  const locale = hasLocale(langValue) ? langValue : defaultLocale;
+  const t = dictionaries[locale].contact.action;
+  const projectTypes = dictionaries[locale].contact.form.types;
+  const withEmail = (template: string) => fill(template, { email: site.email });
+
   // Campo trampa: los formularios automáticos lo completan, las personas no.
   if (clean(formData.get("empresa"), 80) !== "") {
-    return { status: "success", message: "Gracias, recibimos tu mensaje." };
+    return { status: "success", message: t.honeypot };
   }
 
   const nombre = clean(formData.get("nombre"), 80);
@@ -45,17 +55,15 @@ export async function submitContact(
   const mensaje = clean(formData.get("mensaje"), 2000);
 
   const fieldErrors: ContactState["fieldErrors"] = {};
-  if (nombre.length < 2) fieldErrors.nombre = "Contanos cómo te llamás.";
-  if (!EMAIL_RE.test(email)) fieldErrors.email = "Revisá el correo, no parece válido.";
-  if (!(projectTypes as readonly string[]).includes(tipo))
-    fieldErrors.tipo = "Elegí una opción de la lista.";
-  if (mensaje.length < 10)
-    fieldErrors.mensaje = "Escribí al menos una línea sobre tu proyecto.";
+  if (nombre.length < 2) fieldErrors.nombre = t.nameError;
+  if (!EMAIL_RE.test(email)) fieldErrors.email = t.emailError;
+  if (!projectTypes.includes(tipo)) fieldErrors.tipo = t.typeError;
+  if (mensaje.length < 10) fieldErrors.mensaje = t.messageError;
 
   if (Object.keys(fieldErrors).length > 0) {
     return {
       status: "error",
-      message: "Faltan algunos datos para poder responderte.",
+      message: t.missing,
       fieldErrors,
     };
   }
@@ -69,12 +77,13 @@ export async function submitContact(
   if (isRateLimited(ip)) {
     return {
       status: "error",
-      message: `Recibimos varios mensajes desde este dispositivo. Escribinos a ${site.email}.`,
+      message: withEmail(t.rateLimited),
     };
   }
 
   const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.CONTACT_FROM_EMAIL ?? "FluxWeb <onboarding@resend.dev>";
+  const from =
+    process.env.CONTACT_FROM_EMAIL ?? "FluxWeb <onboarding@resend.dev>";
 
   if (!apiKey) {
     console.warn(
@@ -82,15 +91,15 @@ export async function submitContact(
     );
     return {
       status: "error",
-      message: `El formulario todavía no está conectado. Escribinos a ${site.email} y te respondemos hoy.`,
+      message: withEmail(t.notConnected),
     };
   }
 
   // Texto plano: no se interpola contenido de la persona dentro de HTML.
   const body = [
-    `Nombre: ${nombre}`,
-    `Correo: ${email}`,
-    `Tipo de proyecto: ${tipo}`,
+    `${t.mailName}: ${nombre}`,
+    `${t.mailEmail}: ${email}`,
+    `${t.mailType}: ${tipo}`,
     "",
     mensaje,
   ].join("\n");
@@ -106,7 +115,7 @@ export async function submitContact(
         from,
         to: [site.email],
         reply_to: email,
-        subject: `Consulta web · ${tipo} · ${nombre}`,
+        subject: `${t.subject} · ${tipo} · ${nombre}`,
         text: body,
       }),
     });
@@ -115,7 +124,7 @@ export async function submitContact(
       console.error("[contacto] Resend respondió", response.status);
       return {
         status: "error",
-        message: `No pudimos enviar el mensaje. Probá de nuevo o escribinos a ${site.email}.`,
+        message: withEmail(t.sendFailed),
       };
     }
   } catch (error) {
@@ -128,6 +137,6 @@ export async function submitContact(
 
   return {
     status: "success",
-    message: "Listo. Te respondemos dentro de las próximas 24 horas hábiles.",
+    message: t.success,
   };
 }

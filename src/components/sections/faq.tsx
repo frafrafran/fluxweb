@@ -1,19 +1,21 @@
 import { Plus } from "@phosphor-icons/react/dist/ssr";
 import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
-import { faqs } from "@/lib/site";
+import { getContent } from "@/lib/i18n/server";
 
 /**
  * Acordeón nativo: <details> funciona sin JavaScript, es accesible por
  * teclado y el navegador ya resuelve el estado abierto/cerrado.
  */
-export function Faq() {
+export async function Faq() {
+  const { t, faqs } = await getContent();
+
   return (
     <section className="border-t border-line py-24 sm:py-32 lg:py-40">
       <Container size="narrow">
         <Reveal>
           <h2 className="font-display text-display-lg font-medium text-ink">
-            Preguntas que siempre nos hacen.
+            {t.faq.title}
           </h2>
         </Reveal>
 

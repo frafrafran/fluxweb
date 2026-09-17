@@ -72,7 +72,9 @@ export function Button(props: ButtonAsButton | ButtonAsLink) {
       <a
         href={href}
         className={classes}
-        {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+        {...(isExternal
+          ? { target: "_blank", rel: "noopener noreferrer" }
+          : {})}
         {...anchorProps}
       >
         {content}

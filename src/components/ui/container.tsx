@@ -1,7 +1,7 @@
-import type { ElementType, ReactNode } from "react";
+import type { ReactNode } from "react";
 
 type ContainerProps = {
-  as?: ElementType;
+  as?: "div" | "section" | "header" | "footer" | "nav";
   children: ReactNode;
   className?: string;
   /** `wide` respira más en monitores grandes sin romper la medida de lectura. */

@@ -3,14 +3,11 @@ import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
 import { ContactForm } from "@/components/sections/contact-form";
 import { site } from "@/lib/site";
+import { getContent } from "@/lib/i18n/server";
 
-const afterSteps = [
-  "Leemos tu mensaje y respondemos con preguntas concretas.",
-  "Charlamos media hora por videollamada o por donde te quede cómodo.",
-  "Te pasamos un presupuesto cerrado, con etapas y fechas.",
-];
+export async function Contact() {
+  const { t } = await getContent();
 
-export function Contact() {
   return (
     <section
       id="contacto"
@@ -18,9 +15,9 @@ export function Contact() {
     >
       <Container size="wide">
         <Reveal className="max-w-[34rem]">
-          <p className="text-eyebrow">Empecemos</p>
+          <p className="text-eyebrow">{t.contact.eyebrow}</p>
           <h2 className="mt-4 font-display text-display-lg font-medium text-ink">
-            Contanos qué querés construir.
+            {t.contact.title}
           </h2>
         </Reveal>
 
@@ -43,7 +40,7 @@ export function Contact() {
             </a>
 
             <ol className="mt-12 space-y-px">
-              {afterSteps.map((step) => (
+              {t.contact.steps.map((step) => (
                 <li
                   key={step}
                   className="border-t border-line py-5 text-[0.9375rem] leading-relaxed text-ink-soft last:border-b"

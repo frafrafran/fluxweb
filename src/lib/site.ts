@@ -1,14 +1,13 @@
 /**
- * Fuente única de contenido del sitio.
- * Cambiar textos, proyectos o equipo desde acá: los componentes solo renderizan.
+ * Datos del sitio que no cambian con el idioma: nombres propios, enlaces,
+ * imágenes, usuarios y colores. Todo el texto que se lee en pantalla vive en
+ * `src/lib/i18n/es.ts` y `src/lib/i18n/en.ts`; `src/lib/i18n/content.ts` une
+ * las dos cosas en las formas que consumen los componentes.
  */
 
 export const site = {
   name: "FluxWeb",
   legalName: "Flux Webpages",
-  tagline: "Diseño, desarrollo y automatización para emprendimientos.",
-  description:
-    "Estudio de diseño y desarrollo web. Creamos sitios a medida para emprendimientos y automatizamos las tareas repetitivas de tu negocio.",
   email: "fluxwebpages@gmail.com",
   instagram: {
     handle: "@fluxwebpages",
@@ -19,255 +18,197 @@ export const site = {
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://fluxweb.vercel.app",
 } as const;
 
+/** Secciones de la portada con ancla. El rótulo sale del diccionario. */
 export const navLinks = [
-  { href: "/#servicios", label: "Servicios" },
-  { href: "/#trabajos", label: "Trabajos" },
-  { href: "/#proceso", label: "Proceso" },
-  { href: "/#equipo", label: "Equipo" },
+  { id: "servicios", href: "/#servicios" },
+  { id: "trabajos", href: "/#trabajos" },
+  { id: "proceso", href: "/#proceso" },
+  { id: "equipo", href: "/#equipo" },
 ] as const;
 
-export type Service = {
-  id: string;
-  title: string;
-  body: string;
-  points: string[];
-};
+export type NavId = (typeof navLinks)[number]["id"];
 
-export const services: Service[] = [
-  {
-    id: "sitios",
-    title: "Sitios a medida",
-    body: "Diseñamos y programamos cada sitio desde cero, con la identidad de tu marca y sin plantillas de por medio.",
-    points: ["Landing y sitios institucionales", "Catálogos", "Blogs y contenido"],
-  },
-  {
-    id: "tiendas",
-    title: "Tiendas y reservas",
-    body: "Vendé o tomá turnos sin depender de responder mensajes uno por uno.",
-    points: ["Carrito y pagos", "Turnos online", "Panel de administración"],
-  },
-  {
-    id: "automatizacion",
-    title: "Automatización",
-    body: "Conectamos los formularios, la planilla, el mail y WhatsApp para que el trabajo repetido se haga solo.",
-    points: ["Respuestas automáticas", "Reportes semanales", "Integraciones con IA"],
-  },
-  {
-    id: "mantenimiento",
-    title: "Mantenimiento",
-    body: "El sitio queda vivo: cambios, copias de seguridad y monitoreo mes a mes.",
-    points: ["Cambios de contenido", "Backups", "Monitoreo y velocidad"],
-  },
-  {
-    id: "marca",
-    title: "Marca y contenido",
-    body: "Si la identidad todavía no existe, la construimos: logotipo, paleta, tono y textos que suenan a vos.",
-    points: ["Identidad visual", "Textos del sitio", "Contenido para redes"],
-  },
-];
+export const serviceIds = [
+  "sitios",
+  "tiendas",
+  "automatizacion",
+  "mantenimiento",
+  "marca",
+] as const;
+export type ServiceId = (typeof serviceIds)[number];
 
-export type Project = {
-  slug: string;
+export type ProjectData = {
+  slug: "mirande-aybar" | "beclean";
   name: string;
-  sector: string;
   year: string;
-  summary: string;
-  contributions: string[];
   url: string;
+  /** Dominio que se muestra en la barra del marco del hero. */
+  host: string;
   image: string;
-  imageAlt: string;
   /** Preview: desplegado y navegable, todavía sin dominio propio. */
-  status: "Preview" | "En línea";
+  status: "preview" | "live";
 };
 
-export const projects: Project[] = [
+export const projectsData: ProjectData[] = [
   {
     slug: "mirande-aybar",
     name: "Mirande Aybar",
-    sector: "Inmobiliaria · Valle de Calamuchita",
     year: "2026",
-    summary:
-      "Una inmobiliaria con quince años en el valle que trabajaba por teléfono y recomendación. Armamos el catálogo de propiedades y un camino claro para consultar.",
-    contributions: ["Identidad y dirección de arte", "Catálogo de propiedades", "Consultas por WhatsApp"],
-    url: "https://mirande-aybar.vercel.app/",
+    url: "https://mirandeaybar.franciscoaybar2110.workers.dev/",
+    host: "mirandeaybar.franciscoaybar2110.workers.dev",
     image: "/work/mirande-aybar.webp",
-    imageAlt:
-      "Portada del sitio de Mirande Aybar: fotografía de las sierras al amanecer con el título Casas, campos y terrenos.",
-    status: "Preview",
+    status: "preview",
   },
   {
     slug: "beclean",
     name: "BeClean",
-    sector: "Laboratorio de limpieza · PYAM",
     year: "2026",
-    summary:
-      "Un producto técnico que necesitaba explicarse en treinta segundos. Construimos el argumento en pantalla: mecanismo, evidencia y cotización.",
-    contributions: ["Arquitectura del argumento", "Sitio de producto", "Pedido de cotización"],
     url: "https://becleanflux.vercel.app/",
+    host: "becleanflux.vercel.app",
     image: "/work/beclean-flux.webp",
-    imageAlt:
-      "Portada del sitio de BeClean: fondo oscuro con el título Limpiemos hoy, cuidando el mañana y una tableta efervescente.",
-    status: "Preview",
+    status: "preview",
   },
 ];
 
-export type ProcessStep = {
-  id: string;
-  title: string;
-  body: string;
-  detail: string[];
-};
+/** Showreel de la portada: el video comprimido y su póster. */
+export const showreel = {
+  src: "/video/showreel.mp4",
+  poster: "/video/showreel-poster.webp",
+} as const;
 
-export const processSteps: ProcessStep[] = [
-  {
-    id: "entender",
-    title: "Entender",
-    body: "Media hora de charla para saber qué vendés, a quién y qué te está frenando hoy.",
-    detail: ["Objetivos del negocio", "Público y competencia", "Alcance y presupuesto"],
-  },
-  {
-    id: "disenar",
-    title: "Diseñar",
-    body: "Antes de programar mostramos cómo se va a ver y cómo se va a usar, pantalla por pantalla.",
-    detail: ["Estructura de la información", "Diseño en escritorio y celular", "Textos del sitio"],
-  },
-  {
-    id: "construir",
-    title: "Construir",
-    body: "Desarrollo a medida, rápido y accesible. Vas viendo avances reales, no capturas.",
-    detail: ["Código propio, sin plantillas", "Velocidad y SEO técnico", "Enlace de prueba permanente"],
-  },
-  {
-    id: "sostener",
-    title: "Lanzar y sostener",
-    body: "Publicamos, medimos y seguimos al lado tuyo para que el sitio acompañe al negocio.",
-    detail: ["Dominio y publicación", "Medición de visitas", "Cambios y soporte"],
-  },
+/**
+ * Vistas reales de los proyectos publicados, usadas en la banda 3D.
+ * Se capturaron de los sitios en línea; para sumar un proyecto nuevo,
+ * agregar sus capturas en /public/work/vistas y listarlas acá.
+ */
+export const workViews: string[] = [
+  "/work/vistas/mirande-portada.webp",
+  "/work/vistas/beclean-datos.webp",
+  "/work/vistas/mirande-editorial.webp",
+  "/work/vistas/beclean-laboratorio.webp",
+  "/work/vistas/beclean-portada.webp",
+  "/work/vistas/mirande-catalogo.webp",
+  "/work/vistas/beclean-ecuacion.webp",
+  "/work/vistas/mirande-sierras.webp",
+  "/work/vistas/mirande-listado.webp",
+  "/work/vistas/beclean-comparativa.webp",
+  "/work/vistas/beclean-industria.webp",
+  "/work/vistas/beclean-dosis.webp",
+  // La secuencia se repite desplazada para que las cuatro columnas
+  // tengan altura suficiente sin repetir imágenes vecinas.
+  "/work/vistas/beclean-comparativa.webp",
+  "/work/vistas/mirande-catalogo.webp",
+  "/work/vistas/beclean-portada.webp",
+  "/work/vistas/mirande-editorial.webp",
+  "/work/vistas/beclean-dosis.webp",
+  "/work/vistas/mirande-portada.webp",
+  "/work/vistas/beclean-laboratorio.webp",
+  "/work/vistas/mirande-listado.webp",
 ];
 
-export type AutomationCase = {
-  id: string;
-  pain: string;
-  title: string;
-  flow: [string, string, string];
-  result: string;
-};
+/**
+ * Columnas de la galería con columna central fija.
+ * La clave de cada captura (el nombre del archivo) busca su descripción en el
+ * diccionario, así el texto alternativo también cambia de idioma.
+ */
+export const galleryKeys = [
+  [
+    "mirande-catalogo",
+    "beclean-comparativa",
+    "mirande-editorial",
+    "beclean-envase",
+    "mirande-valle",
+  ],
+  ["beclean-portada", "mirande-portada", "beclean-laboratorio"],
+  [
+    "mirande-listado",
+    "beclean-datos",
+    "beclean-ecuacion",
+    "mirande-sierras",
+    "beclean-industria",
+  ],
+] as const;
 
-export const automationCases: AutomationCase[] = [
-  {
-    id: "consultas",
-    pain: "Respondo las mismas preguntas todo el día",
-    title: "Respuestas y derivación automática",
-    flow: [
-      "Alguien consulta desde el sitio o Instagram",
-      "El sistema responde al instante y clasifica el pedido",
-      "Te llega solo lo que necesita una respuesta humana",
-    ],
-    result: "Menos mensajes repetidos y ninguna consulta perdida a la madrugada.",
-  },
-  {
-    id: "presupuestos",
-    pain: "Armo cada presupuesto a mano",
-    title: "Presupuestos generados solos",
-    flow: [
-      "El cliente completa un formulario con su pedido",
-      "Se calcula el precio con tus reglas y tu lista actualizada",
-      "Sale el PDF firmado a su correo y queda registrado",
-    ],
-    result: "De cuarenta minutos por presupuesto a una revisión rápida.",
-  },
-  {
-    id: "turnos",
-    pain: "Coordino turnos por WhatsApp",
-    title: "Agenda que se completa sola",
-    flow: [
-      "La persona elige día y horario disponible",
-      "Se bloquea en tu calendario y se cobra la seña",
-      "Recibe el recordatorio antes de la cita",
-    ],
-    result: "Menos ausencias y una agenda que siempre dice la verdad.",
-  },
-  {
-    id: "reportes",
-    pain: "No sé qué está funcionando",
-    title: "Reporte semanal en tu correo",
-    flow: [
-      "Se juntan visitas, consultas y ventas del sitio",
-      "Se comparan con la semana anterior",
-      "Llega un resumen corto todos los lunes",
-    ],
-    result: "Decisiones con datos, sin abrir cinco paneles distintos.",
-  },
-];
+export type GalleryKey = (typeof galleryKeys)[number][number];
 
-export type TeamMember = {
+/** Con qué está construido el trabajo. El rol de cada una está traducido. */
+export const stackNames = [
+  "Next.js",
+  "React",
+  "TypeScript",
+  "Tailwind CSS",
+  "Motion",
+  "GSAP",
+  "Three.js",
+  "Vercel",
+  "Resend",
+  "Figma",
+] as const;
+export type StackName = (typeof stackNames)[number];
+
+export const processIds = [
+  "entender",
+  "disenar",
+  "construir",
+  "sostener",
+] as const;
+export type ProcessId = (typeof processIds)[number];
+
+export const automationIds = [
+  "consultas",
+  "presupuestos",
+  "turnos",
+  "reportes",
+] as const;
+export type AutomationId = (typeof automationIds)[number];
+
+export type TeamData = {
+  key: "franciscoaybarr" | "joacopugaa" | "joacocastellanoo";
   name: string;
   initials: string;
-  role: string;
-  focus: string;
   instagram: string;
   handle: string;
 };
 
-export const team: TeamMember[] = [
+export const teamData: TeamData[] = [
   {
+    key: "franciscoaybarr",
     name: "Francisco Aybar",
     initials: "FA",
-    role: "Desarrollo fullstack",
-    focus: "Arquitectura, interfaz y performance de cada proyecto.",
     instagram: "https://www.instagram.com/franciscoaybarr/",
     handle: "@franciscoaybarr",
   },
   {
+    key: "joacopugaa",
     name: "Joaquín Puga",
     initials: "JP",
-    role: "Desarrollo y soporte",
-    focus: "Integraciones, mantenimiento y atención después del lanzamiento.",
     instagram: "https://www.instagram.com/joacopugaa/",
     handle: "@joacopugaa",
   },
   {
+    key: "joacocastellanoo",
     name: "Joaquín Castellano",
     initials: "JC",
-    role: "Marketing",
-    focus: "Posicionamiento, contenido y campañas para que el sitio traiga gente.",
     instagram: "https://www.instagram.com/joacocastellanoo/",
     handle: "@joacocastellanoo",
   },
 ];
 
-export const faqs = [
-  {
-    q: "¿Cuánto cuesta un sitio?",
-    a: "Depende del alcance: no es lo mismo una landing de una página que una tienda con pagos y panel. Después de la primera charla te pasamos un presupuesto cerrado, con etapas y fechas, para que no haya sorpresas a mitad de camino.",
-  },
-  {
-    q: "¿Cuánto tarda?",
-    a: "Una landing suele estar lista en dos a tres semanas. Un sitio con catálogo o tienda, entre cuatro y ocho. El plazo real depende sobre todo de qué tan rápido lleguen las fotos, los textos y las aprobaciones de tu lado.",
-  },
-  {
-    q: "¿Qué necesito tener antes de empezar?",
-    a: "Con que tengas claro qué vendés y a quién, alcanza. Si ya tenés logotipo, fotos y textos, los usamos. Si no, los hacemos nosotros: es parte del trabajo y lo cotizamos aparte para que veas cada cosa.",
-  },
-  {
-    q: "¿El dominio y el hosting van por separado?",
-    a: "El dominio se compra a tu nombre y queda tuyo, siempre. La publicación la resolvemos en infraestructura moderna con costo bajo o nulo según el proyecto, y te explicamos exactamente qué se paga y a quién.",
-  },
-  {
-    q: "¿Puedo cambiar cosas después?",
-    a: "Sí. Dejamos el contenido editable donde tiene sentido y, si preferís no tocar nada, el plan de mantenimiento incluye los cambios del mes. Nunca vas a quedar atado a nosotros para modificar un texto.",
-  },
-  {
-    q: "¿Hacen automatizaciones sin rehacer mi web?",
-    a: "Sí. Muchas veces el sitio está bien y lo que falta es conectar el formulario con la planilla, el correo o WhatsApp. Podemos trabajar solo sobre eso, sin tocar el diseño existente.",
-  },
+/** Paleta de la página de marca. Nombre y uso están traducidos. */
+export const brandPalette = [
+  { key: "olive", hex: "#67683D", swatch: "#67683D", ink: "#F7F2E2" },
+  { key: "cream", hex: "#F0E9D6", swatch: "#F0E9D6", ink: "#1B1C12" },
+  { key: "creamDeep", hex: "#E5DCC4", swatch: "#E5DCC4", ink: "#1B1C12" },
+  { key: "ink", hex: "#1B1C12", swatch: "#1B1C12", ink: "#F0E9D6" },
+  { key: "night", hex: "#14150E", swatch: "#14150E", ink: "#F0E9D6" },
+  { key: "oliveLight", hex: "#B9BD7A", swatch: "#B9BD7A", ink: "#14150E" },
 ] as const;
 
-export const projectTypes = [
-  "Sitio web nuevo",
-  "Rediseño de mi sitio",
-  "Tienda online o reservas",
-  "Automatización de procesos",
-  "Marca y contenido",
-  "Todavía no lo tengo claro",
+export const brandDownloads = [
+  { file: "lockup.svg", format: "SVG" },
+  { file: "mark.svg", format: "SVG" },
+  { file: "lockup-olive.png", format: "PNG" },
+  { file: "lockup-cream.png", format: "PNG" },
+  { file: "mark-olive.png", format: "PNG" },
+  { file: "mark-cream.png", format: "PNG" },
 ] as const;

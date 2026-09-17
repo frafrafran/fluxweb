@@ -383,3 +383,188 @@ html.js .mask-line > span {
 details[open] > .faq-body {
   animation: faq-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
+
+/* ---------- Nudo de marca que se dibuja ----------
+   El contorno se traza y después entra el relleno. Es el gesto de marca:
+   el símbolo es un flujo continuo y la animación lo cuenta. */
+.knot-draw {
+  fill: currentColor;
+  fill-rule: evenodd;
+}
+
+html.js .knot-draw {
+  fill-opacity: 0;
+  stroke: currentColor;
+  stroke-width: 6;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation:
+    knot-stroke 2.6s var(--ease-out-quint) both,
+    knot-fill 1.1s ease-out 1.9s both;
+}
+
+/* Cuando el nudo vive dentro de un bloque con aparición, espera su turno. */
+html.js .reveal .knot-draw {
+  animation-play-state: paused;
+}
+
+html.js .reveal[data-in="true"] .knot-draw {
+  animation-play-state: running;
+}
+
+@keyframes knot-stroke {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes knot-fill {
+  from {
+    fill-opacity: 0;
+    stroke-opacity: 1;
+  }
+  to {
+    fill-opacity: 1;
+    stroke-opacity: 0;
+  }
+}
+
+/* ---------- Foco cálido que sigue al cursor ----------
+   Patrón de tarjeta con spotlight, reescrito para la paleta de la marca:
+   una luz de papel, no un brillo de neón. Las coordenadas llegan por
+   variables CSS desde un único listener, sin renders de React. */
+.spotlight-grid {
+  --spot-x: 50%;
+  --spot-y: -200px;
+  --spot-opacity: 0;
+}
+
+.spotlight-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  opacity: var(--spot-opacity);
+  transition: opacity 0.5s var(--ease-out-quint);
+  background: radial-gradient(
+    380px circle at var(--spot-x) var(--spot-y),
+    var(--accent-soft),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  .spotlight-card::before {
+    display: none;
+  }
+}
+
+/* ---------- Lenis ----------
+   Reglas que pide la librería para no pelearse con el scroll nativo. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js .knot-draw {
+    fill-opacity: 1;
+    stroke-opacity: 0;
+    animation: none;
+  }
+}
+
+/* ---------- Transición entre rutas ---------- */
+::view-transition-old(root) {
+  animation: vt-out 0.28s ease both;
+}
+
+::view-transition-new(root) {
+  animation: vt-in 0.5s var(--ease-out-quint) both;
+}
+
+@keyframes vt-out {
+  to {
+    opacity: 0;
+    transform: translate3d(0, -8px, 0);
+  }
+}
+
+@keyframes vt-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* ---------- Haz de luz de la banda de trabajos ----------
+   Reinterpretación del efecto "lamp": la luz nace del borde superior y se
+   abre cuando la banda entra en pantalla. Solo se anima una transformación.
+   El disparador es el atributo data-in que coloca el observador global. */
+.beam-line,
+.beam-core {
+  width: 30rem;
+}
+
+.beam-cone {
+  width: 44rem;
+}
+
+html.js .beam-line,
+html.js .beam-cone {
+  transform: translateX(-50%) scaleX(0.4);
+  transition: transform 1.4s var(--ease-out-quint);
+}
+
+html.js .beam-core {
+  transform: translate(-50%, -50%) scaleX(0.4);
+  transition: transform 1.4s var(--ease-out-quint);
+}
+
+html.js [data-reveal][data-in="true"] .beam-line,
+html.js [data-reveal][data-in="true"] .beam-cone {
+  transform: translateX(-50%) scaleX(1);
+}
+
+html.js [data-reveal][data-in="true"] .beam-core {
+  transform: translate(-50%, -50%) scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js .beam-line,
+  html.js .beam-cone {
+    transform: translateX(-50%) scaleX(1);
+    transition: none;
+  }
+
+  html.js .beam-core {
+    transform: translate(-50%, -50%) scaleX(1);
+    transition: none;
+  }
+}

@@ -1,5 +1,11 @@
 import type { CSSProperties, ReactNode } from "react";
 
+/** Atributos data-* que el componente deja pasar tal cual (por ejemplo
+ *  data-spotlight, que marca las tarjetas iluminadas por el cursor). */
+type DataAttributes = {
+  [key: `data-${string}`]: string | number | boolean | undefined;
+};
+
 type RevealProps = {
   children: ReactNode;
   className?: string;
@@ -8,7 +14,9 @@ type RevealProps = {
   /** Desplazamiento vertical inicial en píxeles. */
   distance?: number;
   as?: "div" | "li" | "article" | "section" | "ul";
-};
+  /** Ancla de la sección, por ejemplo para enlazar desde la navegación. */
+  id?: string;
+} & DataAttributes;
 
 /**
  * Aparición al entrar en pantalla, resuelta en CSS.
@@ -22,6 +30,8 @@ export function Reveal({
   delay = 0,
   distance = 22,
   as: Tag = "div",
+  id,
+  ...rest
 }: RevealProps) {
   const style = {
     "--reveal-delay": `${delay}s`,
@@ -29,7 +39,13 @@ export function Reveal({
   } as CSSProperties;
 
   return (
-    <Tag className={`reveal ${className}`} data-reveal style={style}>
+    <Tag
+      id={id}
+      className={`reveal ${className}`}
+      data-reveal
+      style={style}
+      {...rest}
+    >
       {children}
     </Tag>
   );

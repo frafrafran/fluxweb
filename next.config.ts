@@ -24,6 +24,8 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
+
+  /* El enrutado por idioma vive en `src/proxy.ts`. */
 };
 
 export default nextConfig;

@@ -19,8 +19,8 @@ export function BrandPattern({
       style={{
         opacity,
         backgroundColor: "currentColor",
-        WebkitMaskImage: "url(/brand/mark-mask.png)",
-        maskImage: "url(/brand/mark-mask.png)",
+        WebkitMaskImage: "url(/brand/mark.svg)",
+        maskImage: "url(/brand/mark.svg)",
         WebkitMaskSize: `${size}px`,
         maskSize: `${size}px`,
         WebkitMaskRepeat: "repeat",

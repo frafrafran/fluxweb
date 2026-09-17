@@ -8,7 +8,13 @@ const STORAGE_KEY = "fluxweb-theme";
  * Cambio de tema sin estado en React: el ícono correcto lo decide el CSS
  * a partir del tema vigente, así no hay diferencias entre servidor y cliente.
  */
-export function ThemeToggle({ className = "" }: { className?: string }) {
+export function ThemeToggle({
+  className = "",
+  label = "Cambiar entre tema claro y oscuro",
+}: {
+  className?: string;
+  label?: string;
+}) {
   function toggle() {
     const root = document.documentElement;
     const attr = root.getAttribute("data-theme");
@@ -32,7 +38,7 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
     <button
       type="button"
       onClick={toggle}
-      aria-label="Cambiar entre tema claro y oscuro"
+      aria-label={label}
       className={`inline-flex size-10 items-center justify-center rounded-full border border-line text-ink transition-colors duration-300 hover:border-accent hover:bg-accent-soft ${className}`}
     >
       <Sun size={18} aria-hidden="true" className="hidden dark:block" />

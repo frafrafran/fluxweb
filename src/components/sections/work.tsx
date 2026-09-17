@@ -1,10 +1,14 @@
-import Image from "next/image";
 import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
-import { projects } from "@/lib/site";
+import { WorkImage } from "@/components/sections/work-image";
+import { WorkCursor } from "@/components/sections/work-cursor";
+import { getContent } from "@/lib/i18n/server";
+import { fill } from "@/lib/i18n/content";
 
-export function Work() {
+export async function Work() {
+  const { t, projects } = await getContent();
+
   return (
     <section
       id="trabajos"
@@ -13,7 +17,7 @@ export function Work() {
       <Container size="wide">
         <Reveal className="max-w-[46ch]">
           <h2 className="font-display text-display-lg font-medium text-ink">
-            Lo último que construimos.
+            {t.work.title}
           </h2>
         </Reveal>
 
@@ -28,22 +32,19 @@ export function Work() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group grid items-center gap-8 lg:grid-cols-12 lg:gap-14"
-                  aria-label={`Ver el sitio de ${project.name} en una pestaña nueva`}
+                  aria-label={fill(t.work.openAria, { name: project.name })}
                 >
-                  <div
-                    className={`overflow-hidden rounded-[var(--r-xl)] border border-line bg-paper shadow-[var(--shadow-soft)] transition-shadow duration-500 group-hover:shadow-[var(--shadow-deep)] lg:col-span-8 ${
+                  <WorkCursor
+                    label={fill(t.work.open, { name: project.name })}
+                  />
+
+                  <WorkImage
+                    src={project.image}
+                    alt={project.imageAlt}
+                    className={`lg:col-span-8 ${
                       flipped ? "lg:order-2 lg:col-start-5" : ""
                     }`}
-                  >
-                    <Image
-                      src={project.image}
-                      alt={project.imageAlt}
-                      width={2000}
-                      height={1250}
-                      sizes="(max-width: 1024px) 92vw, 780px"
-                      className="h-auto w-full transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.02]"
-                    />
-                  </div>
+                  />
 
                   <div
                     className={`lg:col-span-4 ${flipped ? "lg:order-1 lg:row-start-1" : ""}`}
@@ -58,14 +59,17 @@ export function Work() {
 
                     <ul className="mt-7 space-y-2 border-t border-line pt-6">
                       {project.contributions.map((item) => (
-                        <li key={item} className="text-[0.9375rem] text-ink-soft">
+                        <li
+                          key={item}
+                          className="text-[0.9375rem] text-ink-soft"
+                        >
                           {item}
                         </li>
                       ))}
                     </ul>
 
                     <p className="mt-7 flex items-center gap-2 font-medium text-accent-text">
-                      <span className="link-underline">Ver sitio</span>
+                      <span className="link-underline">{t.work.seeSite}</span>
                       <ArrowUpRight
                         size={17}
                         weight="bold"
@@ -74,7 +78,7 @@ export function Work() {
                       />
                     </p>
                     <p className="mt-3 text-sm text-muted">
-                      {project.year} · {project.status}
+                      {project.year} · {project.statusLabel}
                     </p>
                   </div>
                 </a>

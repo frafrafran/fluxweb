@@ -2,10 +2,17 @@
 
 import { useActionState, useId } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { ArrowRight, CheckCircle, Warning } from "@phosphor-icons/react/dist/ssr";
+import {
+  ArrowRight,
+  CheckCircle,
+  Warning,
+} from "@phosphor-icons/react/dist/ssr";
 import { submitContact } from "@/lib/actions/contact";
 import { initialContactState } from "@/lib/contact-state";
-import { projectTypes, site } from "@/lib/site";
+import { BorderTrail } from "@/components/motion-primitives/border-trail";
+import { TextShimmer } from "@/components/motion-primitives/text-shimmer";
+import { site } from "@/lib/site";
+import { useContent } from "@/lib/i18n/client";
 
 const fieldBase =
   "w-full rounded-[var(--r-input)] border bg-paper px-4 py-3 text-[0.9375rem] text-ink " +
@@ -19,6 +26,8 @@ export function ContactForm() {
   );
   const reduce = useReducedMotion();
   const id = useId();
+  const { t, locale, projectTypes } = useContent();
+  const f = t.contact.form;
 
   const errors = state.fieldErrors ?? {};
 
@@ -46,7 +55,7 @@ export function ContactForm() {
           className="text-accent"
         />
         <h3 className="mt-5 font-display text-display-md font-medium text-ink">
-          Mensaje enviado.
+          {f.successTitle}
         </h3>
         <p className="mt-3 max-w-[40ch] text-[1.0625rem] leading-relaxed text-muted">
           {state.message}
@@ -62,7 +71,24 @@ export function ContactForm() {
   }
 
   return (
-    <form action={formAction} className="surface-panel p-6 sm:p-8 lg:p-10" noValidate>
+    <form
+      action={formAction}
+      className="surface-panel relative overflow-hidden p-6 sm:p-8 lg:p-10"
+      noValidate
+    >
+      {/* La Server Action responde en el idioma de la página. */}
+      <input type="hidden" name="lang" value={locale} />
+      {/* Mientras el envio viaja, una luz recorre el borde del panel: dice que
+          algo esta pasando sin tapar el formulario ni mover nada de lugar. El
+          estado tambien se anuncia en texto, mas abajo, para lectores de
+          pantalla. */}
+      {isPending && !reduce ? (
+        <BorderTrail
+          size={140}
+          className="bg-accent"
+          transition={{ repeat: Infinity, duration: 3.2, ease: "linear" }}
+        />
+      ) : null}
       <AnimatePresence>
         {state.status === "error" && state.message ? (
           <motion.p
@@ -89,12 +115,12 @@ export function ContactForm() {
             htmlFor={`${id}-nombre`}
             className="mb-2 block text-sm font-medium text-ink"
           >
-            Nombre
+            {f.name}
           </label>
           <input
             type="text"
             autoComplete="name"
-            placeholder="Tu nombre"
+            placeholder={f.namePlaceholder}
             required
             {...field("nombre")}
           />
@@ -108,12 +134,12 @@ export function ContactForm() {
             htmlFor={`${id}-email`}
             className="mb-2 block text-sm font-medium text-ink"
           >
-            Correo
+            {f.email}
           </label>
           <input
             type="email"
             autoComplete="email"
-            placeholder="nombre@correo.com"
+            placeholder={f.emailPlaceholder}
             required
             {...field("email")}
           />
@@ -128,7 +154,7 @@ export function ContactForm() {
           htmlFor={`${id}-tipo`}
           className="mb-2 block text-sm font-medium text-ink"
         >
-          Qué necesitás
+          {f.type}
         </label>
         <select defaultValue={projectTypes[0]} required {...field("tipo")}>
           {projectTypes.map((option) => (
@@ -147,26 +173,33 @@ export function ContactForm() {
           htmlFor={`${id}-mensaje`}
           className="mb-2 block text-sm font-medium text-ink"
         >
-          Tu proyecto
+          {f.project}
         </label>
         <textarea
           rows={5}
-          placeholder="Qué vendés, a quién y qué te gustaría lograr con el sitio."
+          placeholder={f.projectPlaceholder}
           required
           {...field("mensaje")}
         />
-        <p className="mt-2 text-sm text-muted">
-          Con dos o tres líneas alcanza para la primera respuesta.
-        </p>
+        <p className="mt-2 text-sm text-muted">{f.projectHint}</p>
         {errors.mensaje ? (
           <FieldError id={`${id}-mensaje-error`}>{errors.mensaje}</FieldError>
         ) : null}
       </div>
 
       {/* Campo trampa para envíos automáticos: invisible y fuera del recorrido de foco. */}
-      <div aria-hidden="true" className="absolute left-[-9999px] h-0 w-0 overflow-hidden">
-        <label htmlFor={`${id}-empresa`}>No completar</label>
-        <input id={`${id}-empresa`} name="empresa" type="text" tabIndex={-1} autoComplete="off" />
+      <div
+        aria-hidden="true"
+        className="absolute left-[-9999px] h-0 w-0 overflow-hidden"
+      >
+        <label htmlFor={`${id}-empresa`}>{f.honeypot}</label>
+        <input
+          id={`${id}-empresa`}
+          name="empresa"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+        />
       </div>
 
       <button
@@ -175,7 +208,18 @@ export function ContactForm() {
         aria-busy={isPending}
         className="group/btn mt-8 inline-flex h-[3.25rem] w-full items-center justify-center gap-2.5 rounded-full bg-accent px-7 font-medium text-accent-ink shadow-[var(--shadow-sm)] transition-[transform,background-color,box-shadow] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:bg-accent-strong hover:shadow-[var(--shadow-md)] active:translate-y-px active:scale-[0.985] disabled:pointer-events-none disabled:opacity-60 sm:w-auto"
       >
-        {isPending ? "Enviando" : "Enviar consulta"}
+        {isPending ? (
+          /* El brillo recorre la palabra mientras se espera al servidor. */
+          <TextShimmer
+            as="span"
+            duration={1.6}
+            className="[--base-color:var(--accent-ink)] [--base-gradient-color:#ffffff] dark:[--base-color:var(--accent-ink)] dark:[--base-gradient-color:#ffffff]"
+          >
+            {f.sending}
+          </TextShimmer>
+        ) : (
+          f.submit
+        )}
         {isPending ? (
           <span
             aria-hidden="true"
@@ -191,9 +235,7 @@ export function ContactForm() {
         )}
       </button>
 
-      <p className="mt-5 text-sm text-muted">
-        Usamos tus datos solo para responderte esta consulta.
-      </p>
+      <p className="mt-5 text-sm text-muted">{f.privacy}</p>
     </form>
   );
 }
