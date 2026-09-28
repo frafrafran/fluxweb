@@ -23,7 +23,8 @@ export async function Gallery() {
     <section className="border-t border-line bg-paper py-24 sm:py-28 lg:py-32">
       <Container size="wide">
         <Reveal className="max-w-[44ch]">
-          <h2 className="font-display text-display-lg font-medium text-ink">
+          <p className="text-eyebrow">{t.gallery.eyebrow}</p>
+          <h2 className="mt-4 font-display text-display-lg font-medium text-ink">
             {t.gallery.title}
           </h2>
           <p className="mt-5 max-w-[52ch] text-lg leading-relaxed text-muted">

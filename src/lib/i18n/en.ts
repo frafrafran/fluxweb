@@ -78,7 +78,6 @@ export const en: Dictionary = {
     titleStart: "Thirty seconds",
     titleEnd: "of real work.",
     hint: "Keep scrolling",
-    body: "Interfaces, stores and dashboards that came out of this studio. Everything you see is live or on its way.",
     play: "Play the video",
     pause: "Pause the video",
     videoLabel:
@@ -296,33 +295,38 @@ export const en: Dictionary = {
   },
 
   gallery: {
-    title: "Screen by screen.",
-    body: "A website isn't a homepage. These are inner sections of the projects: catalogs, data, listings and real forms. Tap any of them to see it in full.",
+    eyebrow: "References",
+    title: "The bar we set ourselves.",
+    body: "Web design we consider well made: typography with intent, room to breathe, one idea per screen. These aren't our projects — ours are further up — they're what we measure our own work against.",
     expand: "Enlarge",
     close: "Close",
-    prev: "Previous screenshot",
-    next: "Next screenshot",
-    goTo: "Go to screenshot",
+    prev: "Previous image",
+    next: "Next image",
+    goTo: "Go to image",
     alts: {
-      "mirande-catalogo":
-        "Mirande Aybar property catalog with listings and prices.",
-      "beclean-comparativa":
-        "BeClean performance comparison with bars per product.",
-      "mirande-editorial":
-        "Mirande Aybar editorial section about the Calamuchita Valley.",
-      "beclean-envase": "BeClean packaging explanation with numbered steps.",
-      "mirande-valle": "Photograph of the hills on the Mirande Aybar homepage.",
-      "beclean-portada": "BeClean homepage with the effervescent tablet.",
-      "mirande-portada": "Mirande Aybar homepage at sunrise over the hills.",
-      "beclean-laboratorio": "BeClean laboratory section with a process photo.",
-      "mirande-listado":
-        "Mirande Aybar property list with details for each plot.",
-      "beclean-datos": "Water savings figures on the BeClean website.",
-      "beclean-ecuacion": "BeClean dosage explanation, step by step.",
-      "mirande-sierras":
-        "View of the hills with the agency's experience figures.",
-      "beclean-industria":
-        "Opening of BeClean's argument about the cleaning industry.",
+      "panel-analitica":
+        "Dark-mode analytics dashboard with session and load-time charts.",
+      "landing-conversion":
+        "Monitor, tablet and phone showing a landing page design.",
+      "portada-oscura":
+        "Dark-mode course website homepage, open in a design editor.",
+      "sitio-recetas":
+        "Recipe website on a laptop, with a dish photo and generous typography.",
+      "app-viajes":
+        "Travel app on a phone, with destination cards on the screen behind it.",
+      "tablero-metricas": "Metrics dashboard with area charts, open on a laptop.",
+      "cifras-rendimiento":
+        "Screen showing performance figures: cost per conversion and quality score.",
+      "esquema-tablet":
+        "Page wireframe drawn on a tablet: header, blocks and footer.",
+      "paleta-color": "Design desk with colour swatches and a graphics tablet.",
+      "escritorio-estudio":
+        "Studio desk with printed layouts, phones and a laptop.",
+      "boceto-equipo":
+        "A team sketching screen layouts on paper, with coloured notes.",
+      "boceto-mano": "A hand sketching the structure of a screen in pencil.",
+      "esquemas-tablero":
+        "Screen wireframes pinned to a board to lay out the journey.",
     },
   },
 

@@ -23,10 +23,6 @@ export function Showreel() {
       mediaLabel={t.showreel.videoLabel}
       playLabel={t.showreel.play}
       pauseLabel={t.showreel.pause}
-    >
-      <p className="mx-auto max-w-[52ch] text-center text-lg leading-relaxed text-[#c3c4ac]">
-        {t.showreel.body}
-      </p>
-    </ScrollExpandMedia>
+    />
   );
 }

@@ -36,7 +36,9 @@ const playfair = Playfair_Display({
   variable: "--font-playfair",
   subsets: ["latin"],
   display: "swap",
-  weight: ["500", "600"],
+  /* Solo el peso que se usa: `font-medium` es 500. El 600 sumaba dos archivos
+     de fuente que nadie pedia. */
+  weight: ["500"],
   style: ["normal", "italic"],
 });
 

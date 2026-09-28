@@ -79,7 +79,6 @@ export const es = {
     titleStart: "Treinta segundos",
     titleEnd: "de trabajo real.",
     hint: "Seguí bajando",
-    body: "Interfaces, tiendas y paneles que salieron de este taller. Todo lo que aparece está en línea o en camino.",
     play: "Reproducir el video",
     pause: "Pausar el video",
     videoLabel:
@@ -305,38 +304,40 @@ export const es = {
   },
 
   gallery: {
-    title: "Pantalla por pantalla.",
-    body: "Un sitio no es una portada. Estas son secciones internas de los proyectos: catálogos, datos, fichas y formularios reales. Tocá cualquiera para verla entera.",
+    eyebrow: "Referencias",
+    title: "La vara que nos ponemos.",
+    body: "Diseño web que nos parece bien hecho: tipografía con intención, aire suficiente y una sola idea por pantalla. No son trabajos nuestros —esos están más arriba—, son la referencia contra la que medimos lo que hacemos.",
     expand: "Ampliar",
     close: "Cerrar",
-    prev: "Captura anterior",
-    next: "Captura siguiente",
-    goTo: "Ir a la captura",
+    prev: "Imagen anterior",
+    next: "Imagen siguiente",
+    goTo: "Ir a la imagen",
     alts: {
-      "mirande-catalogo":
-        "Catálogo de propiedades de Mirande Aybar con fichas y precios.",
-      "beclean-comparativa":
-        "Comparativa de rendimiento de BeClean con barras por producto.",
-      "mirande-editorial":
-        "Sección editorial de Mirande Aybar sobre el valle de Calamuchita.",
-      "beclean-envase":
-        "Explicación del envasado de BeClean con numeración de pasos.",
-      "mirande-valle":
-        "Fotografía de las sierras en la portada de Mirande Aybar.",
-      "beclean-portada": "Portada de BeClean con la tableta efervescente.",
-      "mirande-portada":
-        "Portada de Mirande Aybar al amanecer sobre las sierras.",
-      "beclean-laboratorio":
-        "Sección de laboratorio de BeClean con foto de proceso.",
-      "mirande-listado":
-        "Listado de propiedades de Mirande Aybar con datos de cada lote.",
-      "beclean-datos": "Cifras de ahorro de agua en el sitio de BeClean.",
-      "beclean-ecuacion":
-        "Explicación de la dosificación de BeClean paso a paso.",
-      "mirande-sierras":
-        "Vista de las sierras con los datos de experiencia del estudio.",
-      "beclean-industria":
-        "Apertura del argumento de BeClean sobre la industria de limpieza.",
+      "panel-analitica":
+        "Panel de analítica en modo oscuro, con gráficos de sesiones y tiempos de carga.",
+      "landing-conversion":
+        "Monitor, tableta y teléfono mostrando el diseño de una página de aterrizaje.",
+      "portada-oscura":
+        "Portada de un sitio de cursos en modo oscuro, abierta en un editor de diseño.",
+      "sitio-recetas":
+        "Sitio de recetas en una notebook, con foto del plato y tipografía amplia.",
+      "app-viajes":
+        "Aplicación de viajes en un teléfono, con tarjetas de destinos en la pantalla de atrás.",
+      "tablero-metricas":
+        "Tablero de métricas con gráficos de área, abierto en una notebook.",
+      "cifras-rendimiento":
+        "Pantalla con cifras de rendimiento: costo por conversión y puntaje de calidad.",
+      "esquema-tablet":
+        "Esquema de una página dibujado en una tableta: encabezado, bloques y pie.",
+      "paleta-color":
+        "Escritorio de diseño con muestras de color y una tableta gráfica.",
+      "escritorio-estudio":
+        "Escritorio de estudio con maquetas impresas, teléfonos y una notebook.",
+      "boceto-equipo":
+        "Equipo dibujando esquemas de pantalla sobre papel, con notas de colores.",
+      "boceto-mano": "Mano dibujando a lápiz la estructura de una pantalla.",
+      "esquemas-tablero":
+        "Esquemas de pantallas colgados en un tablero para ordenar el recorrido.",
     },
   },
 

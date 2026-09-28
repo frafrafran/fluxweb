@@ -35,7 +35,10 @@ export function Process() {
   });
 
   return (
-    <section id="proceso" className="scroll-mt-24 py-24 sm:py-32 lg:py-40">
+    <section
+      id="proceso"
+      className="scroll-mt-24 border-t border-line pb-24 pt-20 sm:pb-32 sm:pt-28 lg:pb-40 lg:pt-32"
+    >
       <Container size="wide">
         <div className="max-w-[46ch]">
           <p className="text-eyebrow">{t.process.eyebrow}</p>

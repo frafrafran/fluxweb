@@ -14,8 +14,15 @@ export const site = {
     url: "https://www.instagram.com/fluxwebpages/",
   },
   repo: "https://github.com/frafrafran/fluxweb",
-  /** Reemplazar por el dominio definitivo cuando se publique. */
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://fluxweb.vercel.app",
+  /**
+   * URL pública. Se lee en el build (queda escrita en el HTML: canónica, Open
+   * Graph, sitemap), así que con un dominio propio hay que definir
+   * NEXT_PUBLIC_SITE_URL en las variables de build de Cloudflare y volver a
+   * publicar.
+   */
+  url:
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    "https://fluxweb.franciscoaybar2110.workers.dev",
 } as const;
 
 /** Secciones de la portada con ancla. El rótulo sale del diccionario. */
@@ -104,28 +111,36 @@ export const workViews: string[] = [
   "/work/vistas/mirande-portada.webp",
   "/work/vistas/beclean-laboratorio.webp",
   "/work/vistas/mirande-listado.webp",
+  "/work/vistas/beclean-envase.webp",
+  "/work/vistas/mirande-valle.webp",
 ];
 
 /**
- * Columnas de la galería con columna central fija.
- * La clave de cada captura (el nombre del archivo) busca su descripción en el
+ * Referencias de diseño, en columnas con la del medio fija.
+ *
+ * No son trabajos del estudio: los trabajos propios están en Trabajos y en la
+ * banda 3D. Estas son fotos de Unsplash (licencia libre, uso comercial sin
+ * atribución) guardadas en `public/work/referencias`, con la saturación un poco
+ * bajada para que la pared se lea como un conjunto y no como stock suelto.
+ *
+ * La clave de cada imagen es el nombre del archivo y busca su descripción en el
  * diccionario, así el texto alternativo también cambia de idioma.
  */
 export const galleryKeys = [
   [
-    "mirande-catalogo",
-    "beclean-comparativa",
-    "mirande-editorial",
-    "beclean-envase",
-    "mirande-valle",
+    "sitio-recetas",
+    "panel-analitica",
+    "esquema-tablet",
+    "paleta-color",
+    "boceto-equipo",
   ],
-  ["beclean-portada", "mirande-portada", "beclean-laboratorio"],
+  ["landing-conversion", "portada-oscura", "app-viajes"],
   [
-    "mirande-listado",
-    "beclean-datos",
-    "beclean-ecuacion",
-    "mirande-sierras",
-    "beclean-industria",
+    "tablero-metricas",
+    "escritorio-estudio",
+    "cifras-rendimiento",
+    "esquemas-tablero",
+    "boceto-mano",
   ],
 ] as const;
 
