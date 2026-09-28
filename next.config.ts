@@ -1,4 +1,9 @@
 import type { NextConfig } from "next";
+import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
+
+/* En `next dev`, expone los bindings de Cloudflare (vars, assets) igual que
+   en producción. No hace nada en el build. */
+initOpenNextCloudflareForDev();
 
 /** Cabeceras de seguridad aplicadas a todas las rutas. */
 const securityHeaders = [
@@ -20,6 +25,12 @@ const nextConfig: NextConfig = {
   images: {
     // Solo se sirven imágenes propias: no hace falta habilitar dominios externos.
     formats: ["image/avif", "image/webp"],
+  },
+  experimental: {
+    /* El paquete de iconos exporta miles de modulos desde su raiz. Los
+       componentes de servidor ya importan de `dist/ssr`, pero los de cliente
+       necesitan la raiz: con esto Next carga solo los iconos usados. */
+    optimizePackageImports: ["@phosphor-icons/react"],
   },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];

@@ -260,8 +260,45 @@ sincronización.
 - Nuevos proyectos: agregar la captura en `public/work/` y una entrada en
   `projects` dentro de `src/lib/site.ts`.
 
-## Despliegue
+## Despliegue en Cloudflare
 
-Pensado para Vercel. Importar el repositorio, cargar las variables de entorno y
-publicar. `npm run build` genera todas las rutas estáticas salvo la Server
-Action del formulario.
+El sitio corre en Cloudflare Workers con el adaptador oficial
+[`@opennextjs/cloudflare`](https://opennext.js.org/cloudflare):
+<https://fluxweb.franciscoaybar2110.workers.dev>
+
+| Archivo | Para qué |
+| --- | --- |
+| `wrangler.jsonc` | nombre del Worker, bindings (assets, imágenes) y flags de compatibilidad |
+| `open-next.config.ts` | caché incremental sobre assets estáticos: todo el sitio es SSG, no hace falta R2 ni KV |
+| `public/_headers` | caché de un año para `/_next/static` |
+| `src/proxy.ts` | corre en el Worker igual que en local |
+
+Comandos:
+
+```bash
+npm run preview   # build + vista previa local en el runtime de Workers (workerd)
+npm run deploy    # build + publicación a Cloudflare
+```
+
+### Publicación automática desde Git
+
+Con el repositorio conectado, **cada push a `main` publica solo** y cada rama
+tiene su URL de vista previa. Se conecta una vez desde el panel:
+
+1. Cloudflare → *Workers & Pages* → **fluxweb** → *Settings* → *Build* →
+   *Connect to Git* y elegir `frafrafran/fluxweb`.
+2. Build command: `npx opennextjs-cloudflare build`
+   Deploy command: `npx opennextjs-cloudflare deploy`
+   Non-production branch deploy command: `npx opennextjs-cloudflare upload`
+3. Variables de build (opcionales): `NEXT_PUBLIC_SITE_URL` cuando haya dominio
+   propio. Secretos de ejecución (`RESEND_API_KEY`, `CONTACT_FROM_EMAIL`) en
+   *Settings* → *Variables and Secrets*, o con `npx wrangler secret put`.
+
+### Notas
+
+- `NEXT_PUBLIC_SITE_URL` se lee en el build y queda escrita en el HTML
+  (canónica, Open Graph, sitemap). Cambiarla implica volver a publicar.
+- Las páginas pregeneradas se sirven por la caché incremental. `preview` y
+  `deploy` la llenan solos (`populateCache`); si se corre `wrangler dev` a
+  mano hay que llenarla antes con `npx opennextjs-cloudflare populateCache local`.
+- El adaptador pide Next 16.3.3 o superior (excluye 16.3.0–16.3.2).
