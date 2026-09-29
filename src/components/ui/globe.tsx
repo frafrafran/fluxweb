@@ -63,6 +63,12 @@ export function World({
     canvas.className = "block cursor-grab touch-pan-y";
     escena.append(canvas);
 
+    /* En pantallas táctiles el globo competía con el scroll del dedo y la
+       página se trababa: ahí va con menos píxeles y menos puntos, sin
+       antialias, a 30 cuadros por segundo y quieto mientras se desplaza. */
+    const tactil = window.matchMedia("(pointer: coarse)").matches;
+    const intervalo = tactil ? 1000 / 30 : 0;
+
     const medir = () =>
       Math.max(1, Math.floor(Math.min(box.clientWidth, box.clientHeight)));
     let size = medir();
@@ -80,14 +86,15 @@ export function World({
     let puntero: number | null = null;
 
     const globe = createGlobe(canvas, {
-      devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
+      devicePixelRatio: Math.min(window.devicePixelRatio || 1, tactil ? 1.5 : 2),
       width: size,
       height: size,
       phi,
       theta,
       dark: 1,
       diffuse: 1.2,
-      mapSamples: 16000,
+      mapSamples: tactil ? 8000 : 16000,
+      context: { antialias: !tactil },
       mapBrightness: 5,
       baseColor: colors.base,
       markerColor: colors.marker,
@@ -107,6 +114,10 @@ export function World({
     let enPantalla = false;
 
     const paso = (ahora: number) => {
+      if (anterior && ahora - anterior < intervalo - 1) {
+        cuadro = requestAnimationFrame(paso);
+        return;
+      }
       const dt = anterior ? Math.min(ahora - anterior, 64) : 16;
       anterior = ahora;
       if (!still && puntero === null) phi += dt * GIRO;
@@ -138,6 +149,17 @@ export function World({
     const alCambiarVisibilidad = () =>
       document.hidden ? frenar() : arrancar();
     document.addEventListener("visibilitychange", alCambiarVisibilidad);
+
+    // En táctil se detiene mientras la página se desplaza y sigue al parar.
+    let reanudar = 0;
+    const alDesplazar = () => {
+      frenar();
+      window.clearTimeout(reanudar);
+      reanudar = window.setTimeout(arrancar, 160);
+    };
+    if (tactil && !still) {
+      window.addEventListener("scroll", alDesplazar, { passive: true });
+    }
 
     const medidor = new ResizeObserver(() => {
       const nuevo = medir();
@@ -176,6 +198,8 @@ export function World({
 
     return () => {
       window.clearTimeout(aparicion);
+      window.clearTimeout(reanudar);
+      window.removeEventListener("scroll", alDesplazar);
       frenar();
       observador.disconnect();
       medidor.disconnect();

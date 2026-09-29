@@ -60,7 +60,7 @@ export function composeContent(locale: Locale) {
     galleryColumns: galleryKeys.map((column) =>
       column.map((key) => ({
         key,
-        src: `/work/referencias/${key}.webp`,
+        src: `/work/galeria/${key}.webp`,
         alt: t.gallery.alts[key],
       })),
     ),

@@ -284,34 +284,37 @@ export const en: Dictionary = {
   },
 
   gallery: {
-    eyebrow: "References",
-    title: "The bar we set ourselves.",
-    body: "Sketches, wireframes, palettes and screens: the craft behind a well-made site. These aren't our projects — ours are further up — they're reference images.",
+    eyebrow: "Screen by screen",
+    title: "This is what our work looks like.",
+    body: "Screenshots of the sites we built and of our own identity, exactly as they're published. Tap any of them to see it full size.",
     expand: "Enlarge",
     close: "Close",
     prev: "Previous image",
     next: "Next image",
     goTo: "Go to image",
     alts: {
-      "panel-analitica":
-        "Dark-mode analytics dashboard with session and load-time charts.",
-      "landing-conversion":
-        "Monitor, tablet and phone showing a landing page design.",
-      "portada-oscura":
-        "Dark-mode course website homepage, open in a design editor.",
-      "app-viajes":
-        "Travel app on a phone, with destination cards on the screen behind it.",
-      "tablero-metricas": "Metrics dashboard with area charts, open on a laptop.",
-      "esquema-tablet":
-        "Page wireframe drawn on a tablet: header, blocks and footer.",
-      "paleta-color": "Design desk with colour swatches and a graphics tablet.",
-      "escritorio-estudio":
-        "Studio desk with printed layouts, phones and a laptop.",
-      "boceto-equipo":
-        "A team sketching screen layouts on paper, with coloured notes.",
-      "boceto-mano": "A hand sketching the structure of a screen in pencil.",
-      "esquemas-tablero":
-        "Screen wireframes pinned to a board to lay out the journey.",
+      "flux-portada":
+        "FluxWeb homepage in Spanish: the serif headline «La web que tu emprendimiento merece.» on a cream background.",
+      "flux-identidad":
+        "FluxWeb brand page: the title «La identidad de FluxWeb.» next to the cream knot symbol on an olive panel.",
+      "flux-paleta":
+        "FluxWeb color palette: olive, cream, ink and night-olive swatches with their names and uses.",
+      "flux-simbolo":
+        "The FluxWeb symbol in four versions: the full logo on cream and on black, and the knot alone on cream and on olive.",
+      "flux-servicios":
+        "FluxWeb services section: cards for custom websites, stores and bookings, automation, maintenance and branding.",
+      "flux-banda":
+        "Dark FluxWeb band with project screenshots tilted in 3D and the call «El próximo puede ser el tuyo.»",
+      "beclean-portada":
+        "BeClean homepage: the headline «Limpiemos hoy, cuidando el mañana.» next to an effervescent tablet surrounded by bubbles, on a dark background.",
+      "beclean-pasos":
+        "BeClean section «Una tableta. Un volumen de agua definido. Listo.», with three steps: preparation, dilution and use.",
+      "mirande-sierras":
+        "Mirande Aybar website: a full-screen photograph of fog-covered hills, with the buttons Ver propiedades and Escribinos.",
+      "mirande-cita":
+        "Mirande Aybar website: a large quote on a cream background that begins «Una casa en las sierras no es solo una dirección».",
+      "mirande-propiedades":
+        "Mirande Aybar listings: cards with photos of plots and houses in the valley, their prices and a summary in figures.",
     },
   },
 

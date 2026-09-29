@@ -293,36 +293,37 @@ export const es = {
   },
 
   gallery: {
-    eyebrow: "Referencias",
-    title: "La vara que nos ponemos.",
-    body: "Bocetos, esquemas, paletas y pantallas: el oficio que hay detrás de un sitio bien hecho. No son trabajos nuestros —esos están más arriba—, son imágenes de referencia.",
+    eyebrow: "Pantalla por pantalla",
+    title: "Así se ve lo que hacemos.",
+    body: "Capturas de los sitios que construimos y de nuestra propia identidad, tal como están publicados. Tocá cualquiera para verla en grande.",
     expand: "Ampliar",
     close: "Cerrar",
     prev: "Imagen anterior",
     next: "Imagen siguiente",
     goTo: "Ir a la imagen",
     alts: {
-      "panel-analitica":
-        "Panel de analítica en modo oscuro, con gráficos de sesiones y tiempos de carga.",
-      "landing-conversion":
-        "Monitor, tableta y teléfono mostrando el diseño de una página de aterrizaje.",
-      "portada-oscura":
-        "Portada de un sitio de cursos en modo oscuro, abierta en un editor de diseño.",
-      "app-viajes":
-        "Aplicación de viajes en un teléfono, con tarjetas de destinos en la pantalla de atrás.",
-      "tablero-metricas":
-        "Tablero de métricas con gráficos de área, abierto en una notebook.",
-      "esquema-tablet":
-        "Esquema de una página dibujado en una tableta: encabezado, bloques y pie.",
-      "paleta-color":
-        "Escritorio de diseño con muestras de color y una tableta gráfica.",
-      "escritorio-estudio":
-        "Escritorio de estudio con maquetas impresas, teléfonos y una notebook.",
-      "boceto-equipo":
-        "Equipo dibujando esquemas de pantalla sobre papel, con notas de colores.",
-      "boceto-mano": "Mano dibujando a lápiz la estructura de una pantalla.",
-      "esquemas-tablero":
-        "Esquemas de pantallas colgados en un tablero para ordenar el recorrido.",
+      "flux-portada":
+        "Portada de FluxWeb: el titular «La web que tu emprendimiento merece.» en letra serif sobre fondo crema.",
+      "flux-identidad":
+        "Página de marca de FluxWeb: el título «La identidad de FluxWeb.» junto al símbolo del nudo en crema sobre un recuadro oliva.",
+      "flux-paleta":
+        "Paleta de color de FluxWeb: muestras de oliva, crema, tinta y oliva noche con sus nombres y usos.",
+      "flux-simbolo":
+        "El símbolo de FluxWeb en cuatro versiones: el logotipo completo sobre crema y sobre negro, y el nudo solo sobre crema y sobre oliva.",
+      "flux-servicios":
+        "Sección de servicios de FluxWeb: tarjetas de sitios a medida, tiendas y reservas, automatización, mantenimiento y marca.",
+      "flux-banda":
+        "Banda oscura de FluxWeb con capturas de proyectos inclinadas en 3D y el llamado «El próximo puede ser el tuyo.»",
+      "beclean-portada":
+        "Portada de BeClean: el titular «Limpiemos hoy, cuidando el mañana.» junto a una tableta efervescente rodeada de burbujas, sobre fondo oscuro.",
+      "beclean-pasos":
+        "Sección de BeClean «Una tableta. Un volumen de agua definido. Listo.», con tres pasos: preparación, dilución y uso.",
+      "mirande-sierras":
+        "Sitio de Mirande Aybar: fotografía a pantalla completa de las sierras cubiertas de niebla, con los botones Ver propiedades y Escribinos.",
+      "mirande-cita":
+        "Sitio de Mirande Aybar: una cita en letras grandes sobre fondo crema que empieza «Una casa en las sierras no es solo una dirección».",
+      "mirande-propiedades":
+        "Listado de Mirande Aybar: tarjetas con fotos de lotes y casas del valle, sus precios y un resumen en cifras.",
     },
   },
 

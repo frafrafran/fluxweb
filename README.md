@@ -84,7 +84,6 @@ heredados de react-aria, `setState` de montaje) están declaradas en
 | TransitionPanel + TextMorph | panel de casos de automatización |
 | AnimatedBackground | pastilla del selector de casos y filas del equipo |
 | MorphingDialog | ampliar cualquier captura de la galería |
-| Carousel | galería en pantallas chicas, donde la columna fija no cabe |
 | BorderTrail + TextShimmer | formulario de contacto mientras se envía |
 | TextScramble | código de error de la página 404 |
 | InView | entrada escalonada de las capturas de la galería |
@@ -243,13 +242,20 @@ crear su diccionario y registrarlo en `dictionaries` dentro de `content.ts`.
   Igual se carga recién cuando la sección se acerca a la pantalla, porque crea
   un contexto WebGL, y solo dibuja mientras está visible. Con «reducir
   movimiento» se dibuja quieto. Si el navegador no puede crear el contexto
-  WebGL, `WebGLBoundary` muestra la alternativa estática.
+  WebGL, `WebGLBoundary` muestra la alternativa estática. En pantallas táctiles
+  va a 1,5× de densidad, con la mitad de puntos, sin antialias, a 30 cuadros
+  por segundo y quieto mientras se desplaza la página: antes trababa el scroll.
 - **«Reducir movimiento» se lee con `src/lib/use-reduced-motion.ts`**, no con
   el hook de Motion: el de Motion lee la preferencia en el primer render del
   cliente y rompe la hidratación (error #418) cuando está activada.
 - **Las capturas de la banda 3D y de la galería** salen de los sitios
-  publicados. Para sumar un proyecto: capturas en `public/work/vistas` y
-  entradas en `workViews` y `galleryColumns` dentro de `src/lib/site.ts`.
+  publicados y de la identidad de FluxWeb, sin fotos de stock. Para sumar un
+  proyecto: capturas en `public/work/vistas` (banda 3D, 520×325) y
+  `public/work/galeria` (1440×900), entradas en `workViews` y `galleryKeys`
+  dentro de `src/lib/site.ts`, y el texto alternativo en los dos diccionarios.
+- **La galería en el teléfono** usa dos columnas que se deslizan en sentidos
+  opuestos con el scroll (`gallery-parallax.tsx`); en escritorio sigue la
+  columna central fija.
 
 ## Nota sobre OneDrive
 

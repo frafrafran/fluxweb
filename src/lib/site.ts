@@ -116,25 +116,20 @@ export const workViews: string[] = [
 ];
 
 /**
- * Referencias de diseño, en columnas con la del medio fija.
+ * Galería, en columnas con la del medio fija.
  *
- * No son trabajos del estudio: los trabajos propios están en Trabajos y en la
- * banda 3D. Estas son fotos de Unsplash (licencia libre, uso comercial sin
- * atribución) guardadas en `public/work/referencias`, con la saturación un poco
- * bajada para que la pared se lea como un conjunto y no como stock suelto.
+ * Todo es trabajo propio: capturas de los sitios publicados de los clientes y
+ * de la identidad de FluxWeb, guardadas en `public/work/galeria` a 1440×900.
+ * Así la pared mantiene la paleta del estudio en lugar de mezclar fotos de
+ * stock.
  *
  * La clave de cada imagen es el nombre del archivo y busca su descripción en el
  * diccionario, así el texto alternativo también cambia de idioma.
  */
 export const galleryKeys = [
-  ["panel-analitica", "esquema-tablet", "paleta-color", "boceto-equipo"],
-  ["landing-conversion", "portada-oscura", "app-viajes"],
-  [
-    "tablero-metricas",
-    "escritorio-estudio",
-    "esquemas-tablero",
-    "boceto-mano",
-  ],
+  ["flux-portada", "beclean-pasos", "mirande-cita", "flux-simbolo"],
+  ["flux-identidad", "beclean-portada", "mirande-sierras"],
+  ["flux-servicios", "mirande-propiedades", "flux-paleta", "flux-banda"],
 ] as const;
 
 export type GalleryKey = (typeof galleryKeys)[number][number];
