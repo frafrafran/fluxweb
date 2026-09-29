@@ -11,7 +11,6 @@ import {
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { Container } from "@/components/ui/container";
 import { SlidingNumber } from "@/components/motion-primitives/sliding-number";
-import { Spotlight } from "@/components/motion-primitives/spotlight";
 import { useContent } from "@/lib/i18n/client";
 import type { ProcessStep } from "@/lib/i18n/content";
 
@@ -21,6 +20,7 @@ import type { ProcessStep } from "@/lib/i18n/content";
  */
 export function Process() {
   const { t, processSteps } = useContent();
+  const reduce = useReducedMotion();
   const container = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: container,
@@ -62,7 +62,15 @@ export function Process() {
               >
                 <span className="sr-only">{t.process.stage} </span>
                 <span aria-hidden="true" className="text-accent-text">
-                  <SlidingNumber value={current} padStart />
+                  {/* SlidingNumber anima con resortes que no miran «reducir
+                      movimiento»: en ese caso va el número quieto. */}
+                  {reduce ? (
+                    <span className="tabular-nums leading-none">
+                      {String(current).padStart(2, "0")}
+                    </span>
+                  ) : (
+                    <SlidingNumber value={current} padStart />
+                  )}
                 </span>
                 <span className="sr-only">
                   {current} {t.process.of} {total}
@@ -137,14 +145,6 @@ function StepCard({
         }
         className="surface-panel grid min-h-[min(56vh,26rem)] content-center gap-6 p-8 shadow-[var(--shadow-soft)] sm:p-10 lg:grid-cols-12 lg:gap-10 lg:p-12"
       >
-        {/* Luz corta que sigue al cursor: da relieve sin tapar el texto. */}
-        {reduce ? null : (
-          <Spotlight
-            size={320}
-            className="bg-[radial-gradient(circle_at_center,var(--accent-soft),transparent_70%)]"
-          />
-        )}
-
         <div className="lg:col-span-6">
           <h3 className="font-display text-display-md font-medium text-ink">
             {step.title}

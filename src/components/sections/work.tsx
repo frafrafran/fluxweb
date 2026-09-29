@@ -2,7 +2,6 @@ import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
 import { WorkImage } from "@/components/sections/work-image";
-import { WorkCursor } from "@/components/sections/work-cursor";
 import { getContent } from "@/lib/i18n/server";
 import { fill } from "@/lib/i18n/content";
 
@@ -34,10 +33,6 @@ export async function Work() {
                   className="group grid items-center gap-8 lg:grid-cols-12 lg:gap-14"
                   aria-label={fill(t.work.openAria, { name: project.name })}
                 >
-                  <WorkCursor
-                    label={fill(t.work.open, { name: project.name })}
-                  />
-
                   <WorkImage
                     src={project.image}
                     alt={project.imageAlt}

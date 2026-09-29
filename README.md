@@ -10,7 +10,7 @@ Presenta el trabajo del equipo y recibe consultas de nuevos proyectos.
 | Framework | Next.js 16 (App Router, React Server Components) |
 | Lenguaje | TypeScript |
 | Estilos | Tailwind CSS v4 con tokens propios en `src/app/globals.css` |
-| Movimiento | CSS para las apariciones, `motion` en las islas, `lenis` para el scroll, `gsap` para el parallax por capas |
+| Movimiento | CSS para las apariciones, `motion` en las islas (también el parallax por capas), `lenis` para el scroll |
 | Componentes animados | [Motion Primitives](https://motion-primitives.com) (MIT), copiados al repo en `src/components/motion-primitives/` |
 | Globo | [`cobe`](https://github.com/shuding/cobe) (MIT, ~13 KB, sin dependencias), solo en la sección de alcance |
 | Iconos | `@phosphor-icons/react` (import desde `dist/ssr` en los componentes de servidor) |
@@ -34,7 +34,6 @@ licencia:
 | Magic UI | MIT | la idea del texto que se enciende palabra por palabra |
 | React Bits | MIT + Commons Clause | referencia de interacciones |
 | Aceternity UI | propietaria, de pago | patrones reimplementados: foco que sigue al cursor, marquee 3D, lámpara cenital y menú desplegable |
-| GSAP | licencia estándar sin cargo | parallax por capas |
 
 ## Motion Primitives
 
@@ -78,29 +77,27 @@ heredados de react-aria, `setState` de montaje) están declaradas en
 | --- | --- |
 | ScrollProgress | barra de avance del encabezado, en todas las páginas |
 | Scroll Expansion Hero (21st.dev) | showreel que crece al bajar, después de la portada. Reescrito: el original captura la rueda y el táctil de toda la ventana y fuerza el scroll a cero hasta terminar; acá la expansión sale del scroll real, convive con Lenis y funciona con teclado. Vive en `src/components/ui/scroll-expansion-hero.tsx` |
-| Magnetic | los tres botones principales y el CTA del encabezado |
 | MorphingPopover | atajo de contacto del encabezado |
-| TextLoop | antetítulo de la portada |
-| GlowEffect | halo del botón principal |
-| Tilt | tarjetas de proyecto |
-| Cursor | rótulo que sigue al puntero sobre cada proyecto |
 | TextEffect | titular de la banda oscura |
-| InfiniteSlider + ProgressiveBlur | banda «Con qué lo construimos» |
-| SlidingNumber + Spotlight | contador y luz de las etapas del proceso |
+| InfiniteSlider | banda «Con qué lo construimos»; se detiene fuera de pantalla (prop `paused`) |
+| SlidingNumber | contador de las etapas del proceso (quieto con «reducir movimiento») |
 | TransitionPanel + TextMorph | panel de casos de automatización |
 | AnimatedBackground | pastilla del selector de casos y filas del equipo |
 | MorphingDialog | ampliar cualquier captura de la galería |
 | Carousel | galería en pantallas chicas, donde la columna fija no cabe |
-| Dock | accesos directos del pie |
 | BorderTrail + TextShimmer | formulario de contacto mientras se envía |
 | TextScramble | código de error de la página 404 |
 | InView | entrada escalonada de las capturas de la galería |
 
-Ocho quedaron sin usar: `accordion`, `disclosure`, `dialog`,
-`image-comparison`, `animated-group`, `animated-number`, `text-roll` y
-`spinning-text` (el sello de la portada se quitó para que el titular ocupe
-todo el ancho), más `text-shimmer-wave`. Siguen en la carpeta y no pesan en el bundle, porque nada
-los importa. Cuatro se descartaron por motivos concretos:
+Quedaron sin usar: `accordion`, `disclosure`, `dialog`, `image-comparison`,
+`animated-group`, `animated-number`, `text-roll`, `text-shimmer-wave` y los
+que salieron en la auditoría contra sitios de agencias: `spinning-text` (el
+sello de la portada), `magnetic`, `glow-effect`, `text-loop`, `dock`, `tilt`,
+`cursor`, `spotlight` y `progressive-blur`. El movimiento lo pone el trabajo,
+no la interfaz. Además `magnetic`, `dock` y `sliding-number` usan `useSpring`,
+que no respeta el `reducedMotion` de `MotionConfig`: seguían moviéndose con
+«reducir movimiento». Siguen en la carpeta y no pesan en el bundle, porque
+nada los importa. Cuatro se descartaron por motivos concretos:
 
 - **`accordion` y `disclosure`** habrían reemplazado el `<details>` nativo de
   las preguntas frecuentes, que ya es accesible por teclado y funciona sin
@@ -235,7 +232,13 @@ crear su diccionario y registrarlo en `dictionaries` dentro de `content.ts`.
   original. Pesan 2 y 4.7 KB, se pintan con `currentColor` y el símbolo del
   hero se dibuja a sí mismo al cargar.
 - **Scroll suavizado con Lenis**, apagado por completo si el sistema pide menos
-  movimiento. Las transiciones entre rutas usan `ViewTransition` de React.
+  movimiento. Va con `autoToggle`: se frena cuando `<html>` pasa a
+  `overflow: hidden`, así que la galería ampliada y el menú bloquean el scroll
+  desde `<html>` y no desde `<body>` (Lenis no mira el de `<body>`). Las
+  transiciones entre rutas usan `ViewTransition` de React.
+- **GSAP salió del sitio**: el parallax por capas lo hace Motion, que la página
+  ya carga (unos 46 KB comprimidos menos de JS inicial). Sigue en la lista de
+  Stack porque se usa en BeClean.
 - **El globo usa cobe**, no three.js: pasó de 622 KB comprimidos a unos 5 KB.
   Igual se carga recién cuando la sección se acerca a la pantalla, porque crea
   un contexto WebGL, y solo dibuja mientras está visible. Con «reducir

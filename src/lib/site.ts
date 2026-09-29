@@ -127,18 +127,11 @@ export const workViews: string[] = [
  * diccionario, así el texto alternativo también cambia de idioma.
  */
 export const galleryKeys = [
-  [
-    "sitio-recetas",
-    "panel-analitica",
-    "esquema-tablet",
-    "paleta-color",
-    "boceto-equipo",
-  ],
+  ["panel-analitica", "esquema-tablet", "paleta-color", "boceto-equipo"],
   ["landing-conversion", "portada-oscura", "app-viajes"],
   [
     "tablero-metricas",
     "escritorio-estudio",
-    "cifras-rendimiento",
     "esquemas-tablero",
     "boceto-mano",
   ],

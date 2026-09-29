@@ -1,6 +1,5 @@
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { Container } from "@/components/ui/container";
-import { Magnetic } from "@/components/motion-primitives/magnetic";
 import { ShowcaseHeading } from "@/components/sections/showcase-heading";
 import { Reveal } from "@/components/ui/reveal";
 import { ThreeDMarquee } from "@/components/ui/three-d-marquee";
@@ -57,20 +56,18 @@ export async function Showcase() {
         </Reveal>
 
         <Reveal delay={0.1} className="mt-10 flex justify-center">
-          <Magnetic intensity={0.35} range={110} actionArea="self">
-            <a
-              href="#contacto"
-              className="group/btn inline-flex h-[3.25rem] items-center justify-center gap-2.5 rounded-full bg-[#f0e9d6] px-7 font-medium text-[#23251a] transition-[transform,background-color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:bg-white active:translate-y-px active:scale-[0.985]"
-            >
-              {t.showcase.cta}
-              <ArrowRight
-                size={18}
-                weight="bold"
-                aria-hidden="true"
-                className="transition-transform duration-300 group-hover/btn:translate-x-1"
-              />
-            </a>
-          </Magnetic>
+          <a
+            href="#contacto"
+            className="group/btn inline-flex h-[3.25rem] items-center justify-center gap-2.5 rounded-full bg-[#f0e9d6] px-7 font-medium text-[#23251a] transition-[transform,background-color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:bg-white active:translate-y-px active:scale-[0.985]"
+          >
+            {t.showcase.cta}
+            <ArrowRight
+              size={18}
+              weight="bold"
+              aria-hidden="true"
+              className="transition-transform duration-300 group-hover/btn:translate-x-1"
+            />
+          </a>
         </Reveal>
       </Container>
     </section>

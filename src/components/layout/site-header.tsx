@@ -20,7 +20,6 @@ import { Logo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { ScrollBar } from "@/components/ui/scroll-bar";
-import { Magnetic } from "@/components/motion-primitives/magnetic";
 import {
   MorphingPopover,
   MorphingPopoverContent,
@@ -89,8 +88,9 @@ export function SiteHeader() {
   useEffect(() => {
     if (!open) return;
 
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    /* En <html> y no en <body>: es el overflow que mira Lenis para frenarse. */
+    const previous = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = "hidden";
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") setOpen(false);
@@ -98,7 +98,7 @@ export function SiteHeader() {
     window.addEventListener("keydown", onKeyDown);
 
     return () => {
-      document.body.style.overflow = previous;
+      document.documentElement.style.overflow = previous;
       window.removeEventListener("keydown", onKeyDown);
     };
   }, [open]);
@@ -304,11 +304,9 @@ export function SiteHeader() {
           <ThemeToggle label={t.nav.theme} />
           {/* El envoltorio decide la visibilidad: el botón ya trae su propio display. */}
           <div className="hidden sm:block">
-            <Magnetic intensity={0.25} range={90} actionArea="self">
-              <Button href={href("/#contacto")} size="md">
-                {t.nav.cta}
-              </Button>
-            </Magnetic>
+            <Button href={href("/#contacto")} size="md">
+              {t.nav.cta}
+            </Button>
           </div>
           <button
             type="button"
@@ -336,7 +334,12 @@ export function SiteHeader() {
             animate={{ opacity: 1, y: 0 }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, y: -12 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="overflow-hidden border-t border-line bg-paper lg:hidden"
+            /* Encima del contenido, no en el flujo: si empujara la página, al
+               cerrarse después de tocar un enlace todo subía y el salto
+               quedaba pasado de la sección. Si no entra en la pantalla,
+               se desplaza por dentro. */
+            data-lenis-prevent
+            className="absolute inset-x-0 top-full max-h-[calc(100dvh-4.5rem)] overflow-y-auto border-y border-line bg-paper lg:hidden"
           >
             <nav aria-label={t.nav.menu} className="px-5 py-6 sm:px-8">
               <ul className="flex flex-col">

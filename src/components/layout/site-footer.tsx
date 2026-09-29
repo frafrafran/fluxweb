@@ -1,8 +1,11 @@
 import Link from "next/link";
-import { ArrowUp, InstagramLogo } from "@phosphor-icons/react/dist/ssr";
+import {
+  ArrowUp,
+  GithubLogo,
+  InstagramLogo,
+} from "@phosphor-icons/react/dist/ssr";
 import { Logo } from "@/components/brand/logo";
 import { Container } from "@/components/ui/container";
-import { FooterDock } from "@/components/layout/footer-dock";
 import { site } from "@/lib/site";
 import { getContent } from "@/lib/i18n/server";
 
@@ -102,12 +105,22 @@ export async function SiteFooter() {
                     {site.instagram.handle}
                   </a>
                 </li>
+                <li>
+                  {/* El código del sitio es público: es prueba de oficio. */}
+                  <a
+                    href={site.repo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="link-underline inline-flex items-center gap-2 text-[0.9375rem] text-muted transition-colors duration-300 hover:text-ink"
+                  >
+                    <GithubLogo size={16} aria-hidden="true" />
+                    {t.footer.code}
+                  </a>
+                </li>
               </ul>
             </div>
           </nav>
         </div>
-
-        <FooterDock />
 
         <div className="mt-16 flex flex-col gap-4 border-t border-line pt-8 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-muted">

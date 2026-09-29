@@ -20,6 +20,9 @@ export function SmoothScroll() {
       // Los enlaces internos los resuelve Lenis, descontando el encabezado fijo.
       anchors: { offset: -96 },
       autoRaf: true,
+      // Se frena mientras <html> tiene overflow:hidden. Sin esto la rueda
+      // seguía moviendo la página detrás de la galería ampliada y del menú.
+      autoToggle: true,
     });
 
     // Si la persona cambia la preferencia con la página abierta, se desactiva.

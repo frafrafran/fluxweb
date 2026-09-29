@@ -1,11 +1,12 @@
 "use client";
 
+import { useRef } from "react";
+import { useInView } from "motion/react";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 import useMeasure from "react-use-measure";
 import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
 import { InfiniteSlider } from "@/components/motion-primitives/infinite-slider";
-import { ProgressiveBlur } from "@/components/motion-primitives/progressive-blur";
 import { useContent } from "@/lib/i18n/client";
 import type { Content } from "@/lib/i18n/content";
 
@@ -23,9 +24,9 @@ const ANCHO_MINIMO_PASTILLA = 130;
 
 /**
  * Con qué está hecho.
- * Dos hileras que corren en sentidos opuestos y se desdibujan contra los
- * bordes, así el bloque no termina en un corte seco. Al pasar el cursor bajan
- * la velocidad para poder leerlas.
+ * Dos hileras que corren en sentidos opuestos y se funden contra los bordes,
+ * así el bloque no termina en un corte seco. Al pasar el cursor bajan la
+ * velocidad para poder leerlas, y fuera de pantalla se detienen.
  *
  * Con «reducir movimiento» activado las hileras quedan quietas y se leen como
  * dos listas comunes, sin perder ningún nombre.
@@ -34,6 +35,10 @@ export function Stack() {
   const reduce = useReducedMotion();
   const { t, stack } = useContent();
   const [banda, { width }] = useMeasure();
+  /* Fuera de pantalla la cinta se detiene; el margen hace que el reinicio
+     pase antes de que se vea. */
+  const zona = useRef<HTMLDivElement>(null);
+  const enPantalla = useInView(zona, { margin: "200px 0px" });
 
   /* Las dos hileras llevan la lista completa, arrancando por distinto lugar:
      así ninguna queda corta y no se leen como la misma cinta repetida. */
@@ -55,36 +60,31 @@ export function Stack() {
       </Container>
 
       {/* La hilera es más ancha que la pantalla a propósito: se recorta acá
-          para que no empuje el ancho del documento. En el teléfono los bordes
-          se funden con una máscara: el desenfoque apila dieciséis capas de
-          backdrop-filter sobre algo que se mueve, y ahí cuesta batería. */}
-      <div
-        ref={banda}
-        className="relative mt-12 overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_2rem,#000_calc(100%-2rem),transparent)] sm:[mask-image:none] lg:mt-16"
-      >
-        <div className="flex flex-col gap-3">
-          {hileras.map((hilera, index) => (
-            <Hilera
-              key={index}
-              items={hilera}
-              ancho={width}
-              reverse={index === 1}
-              quieta={!!reduce}
-            />
-          ))}
+          para que no empuje el ancho del documento. Los bordes se funden con
+          una sola máscara, no con capas de desenfoque sobre algo que se mueve.
+          Quieta (reducir movimiento) no lleva máscara: se lee entera. */}
+      <div ref={zona} className="mt-12 lg:mt-16">
+        <div
+          ref={banda}
+          className={`relative overflow-hidden ${
+            reduce
+              ? ""
+              : "[mask-image:linear-gradient(to_right,transparent,#000_2rem,#000_calc(100%-2rem),transparent)] sm:[mask-image:linear-gradient(to_right,transparent,#000_8rem,#000_calc(100%-8rem),transparent)]"
+          }`}
+        >
+          <div className="flex flex-col gap-3">
+            {hileras.map((hilera, index) => (
+              <Hilera
+                key={index}
+                items={hilera}
+                ancho={width}
+                reverse={index === 1}
+                quieta={!!reduce}
+                pausada={!enPantalla}
+              />
+            ))}
+          </div>
         </div>
-
-        {/* Los bordes se difuminan en vez de cortarse. */}
-        <ProgressiveBlur
-          direction="left"
-          blurIntensity={0.6}
-          className="pointer-events-none absolute inset-y-0 left-0 hidden w-32 sm:block"
-        />
-        <ProgressiveBlur
-          direction="right"
-          blurIntensity={0.6}
-          className="pointer-events-none absolute inset-y-0 right-0 hidden w-32 sm:block"
-        />
       </div>
     </section>
   );
@@ -95,11 +95,13 @@ function Hilera({
   ancho,
   reverse,
   quieta,
+  pausada,
 }: {
   items: Content["stack"];
   ancho: number;
   reverse: boolean;
   quieta: boolean;
+  pausada: boolean;
 }) {
   const [vueltaRef, { width: medido }] = useMeasure();
 
@@ -131,7 +133,13 @@ function Hilera({
   const repeticiones = Math.max(1, Math.ceil(disponible / anchoVuelta));
 
   return (
-    <InfiniteSlider gap={12} speed={26} speedOnHover={7} reverse={reverse}>
+    <InfiniteSlider
+      gap={12}
+      speed={26}
+      speedOnHover={7}
+      reverse={reverse}
+      paused={pausada}
+    >
       {Array.from({ length: repeticiones }, (_, vuelta) => (
         <div
           key={vuelta}

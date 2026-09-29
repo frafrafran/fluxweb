@@ -23,16 +23,20 @@ export function LampContainer({
 }) {
   const reduce = useReducedMotion();
 
-  /* whileInView se mantiene siempre: «reducir movimiento» se conoce después
-     de hidratar, cuando el estado inicial ya está montado. Si se quitara, la
-     luz quedaría a medio abrir; con duración 0 salta directo al final. */
-  const grow = (from: string, to: string) => ({
-    initial: reduce ? false : { opacity: 0.5, width: from },
-    whileInView: { opacity: 1, width: to },
+  /* La luz se abre con scaleX, no con width: no mueve el layout (sin saltos
+     de CLS) y, sin JavaScript, la hoja <noscript> resetea transform y la
+     lámpara aparece completa en vez de quedar abierta a medias.
+     whileInView se mantiene siempre: «reducir movimiento» se conoce después
+     de hidratar, cuando el estado inicial ya está montado. Con duración 0
+     salta directo al final. */
+  const grow = (origin: string) => ({
+    initial: reduce ? false : { opacity: 0.5, scaleX: 0.5 },
+    whileInView: { opacity: 1, scaleX: 1 },
     viewport: { once: true, amount: 0.3 },
+    style: { transformOrigin: origin },
     transition: reduce
       ? { duration: 0 }
-      : { delay: 0.2, duration: 0.9, ease: "easeInOut" as const },
+      : { delay: 0.2, duration: 0.9, ease: [0.16, 1, 0.3, 1] as const },
   });
 
   return (
@@ -41,8 +45,9 @@ export function LampContainer({
     >
       <div className="relative isolate z-0 flex w-full flex-1 scale-y-125 items-center justify-center">
         <motion.div
-          {...grow("15rem", "30rem")}
+          {...grow("right center")}
           style={{
+            transformOrigin: "right center",
             backgroundImage: `conic-gradient(var(--conic-position), ${LIGHT}, transparent, transparent)`,
           }}
           className="absolute inset-auto right-1/2 h-56 w-[30rem] overflow-visible opacity-40 [--conic-position:from_70deg_at_center_top]"
@@ -64,8 +69,9 @@ export function LampContainer({
         </motion.div>
 
         <motion.div
-          {...grow("15rem", "30rem")}
+          {...grow("left center")}
           style={{
+            transformOrigin: "left center",
             backgroundImage: `conic-gradient(var(--conic-position), transparent, transparent, ${LIGHT})`,
           }}
           className="absolute inset-auto left-1/2 h-56 w-[30rem] opacity-40 [--conic-position:from_290deg_at_center_top]"
@@ -90,11 +96,11 @@ export function LampContainer({
         <div className="absolute inset-auto z-50 h-36 w-[28rem] -translate-y-1/2 rounded-full bg-[#b9bd7a] opacity-25 blur-3xl" />
 
         <motion.div
-          {...grow("8rem", "16rem")}
+          {...grow("center")}
           className="absolute inset-auto z-30 h-36 w-64 -translate-y-24 rounded-full bg-[#b9bd7a] opacity-30 blur-2xl"
         />
         <motion.div
-          {...grow("15rem", "30rem")}
+          {...grow("center")}
           className="absolute inset-auto z-50 h-px w-[30rem] -translate-y-28 bg-[#b9bd7a]"
         />
 

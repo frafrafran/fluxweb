@@ -11,6 +11,8 @@ export type InfiniteSliderProps = {
   speedOnHover?: number;
   direction?: "horizontal" | "vertical";
   reverse?: boolean;
+  /** Detiene la cinta donde está; al volver sigue desde ese punto. */
+  paused?: boolean;
   className?: string;
 };
 
@@ -21,6 +23,7 @@ export function InfiniteSlider({
   speedOnHover,
   direction = "horizontal",
   reverse = false,
+  paused = false,
   className,
 }: InfiniteSliderProps) {
   const [isHovering, setIsHovering] = useState(false);
@@ -31,6 +34,10 @@ export function InfiniteSlider({
   const [key, setKey] = useState(0);
 
   useEffect(() => {
+    // Fuera de pantalla no corre: una animación infinita que nadie ve solo
+    // gasta batería.
+    if (paused) return;
+
     let controls;
     const size = direction === "horizontal" ? width : height;
     const contentSize = size + gap;
@@ -40,7 +47,9 @@ export function InfiniteSlider({
     const distanceToTravel = Math.abs(to - from);
     const duration = distanceToTravel / currentSpeed;
 
-    if (isTransitioning) {
+    // Si quedó a mitad de camino (pausa, cambio de velocidad o de tamaño),
+    // termina la vuelta desde ahí en lugar de saltar al principio.
+    if (isTransitioning || translation.get() !== from) {
       const remainingDistance = Math.abs(translation.get() - to);
       const transitionDuration = remainingDistance / currentSpeed;
 
@@ -48,6 +57,7 @@ export function InfiniteSlider({
         ease: "linear",
         duration: transitionDuration,
         onComplete: () => {
+          translation.set(from);
           setIsTransitioning(false);
           setKey((prevKey) => prevKey + 1);
         },
@@ -76,6 +86,7 @@ export function InfiniteSlider({
     isTransitioning,
     direction,
     reverse,
+    paused,
   ]);
 
   const hoverProps = speedOnHover

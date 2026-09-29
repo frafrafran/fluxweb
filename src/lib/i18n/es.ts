@@ -57,13 +57,6 @@ export const es = {
 
   hero: {
     eyebrow: "Estudio de diseño y desarrollo",
-    rotating: [
-      "sitios a medida",
-      "tiendas online",
-      "turnos y reservas",
-      "catálogos",
-      "automatizaciones",
-    ],
     titleStart: "La web que tu",
     titleMid: "emprendimiento",
     titleEm: "merece",
@@ -137,7 +130,6 @@ export const es = {
   work: {
     title: "Lo último que construimos.",
     seeSite: "Ver sitio",
-    open: "Abrir {name}",
     openAria: "Ver el sitio de {name} en una pestaña nueva",
     status: { preview: "Preview", live: "En línea" },
     projects: {
@@ -151,7 +143,7 @@ export const es = {
           "Consultas por WhatsApp",
         ],
         imageAlt:
-          "Portada del sitio de Mirande Aybar: fotografía de las sierras al amanecer con el título Casas, campos y terrenos.",
+          "Portada del sitio de Mirande Aybar: el nombre de la inmobiliaria en letras grandes sobre una fotografía de Villa General Belgrano, con la torre de la iglesia y los techos entre los árboles.",
       },
       beclean: {
         sector: "Laboratorio de limpieza · PYAM",
@@ -163,7 +155,7 @@ export const es = {
           "Pedido de cotización",
         ],
         imageAlt:
-          "Portada del sitio de BeClean: fondo oscuro con el título Limpiemos hoy, cuidando el mañana y una tableta efervescente.",
+          "Portada del sitio de BeClean: fondo oscuro con el título Limpiemos hoy, cuidando el mañana y una tableta efervescente rodeada de burbujas.",
       },
     },
   },
@@ -303,7 +295,7 @@ export const es = {
   gallery: {
     eyebrow: "Referencias",
     title: "La vara que nos ponemos.",
-    body: "Diseño web que nos parece bien hecho: tipografía con intención, aire suficiente y una sola idea por pantalla. No son trabajos nuestros —esos están más arriba—, son la referencia contra la que medimos lo que hacemos.",
+    body: "Bocetos, esquemas, paletas y pantallas: el oficio que hay detrás de un sitio bien hecho. No son trabajos nuestros —esos están más arriba—, son imágenes de referencia.",
     expand: "Ampliar",
     close: "Cerrar",
     prev: "Imagen anterior",
@@ -316,14 +308,10 @@ export const es = {
         "Monitor, tableta y teléfono mostrando el diseño de una página de aterrizaje.",
       "portada-oscura":
         "Portada de un sitio de cursos en modo oscuro, abierta en un editor de diseño.",
-      "sitio-recetas":
-        "Sitio de recetas en una notebook, con foto del plato y tipografía amplia.",
       "app-viajes":
         "Aplicación de viajes en un teléfono, con tarjetas de destinos en la pantalla de atrás.",
       "tablero-metricas":
         "Tablero de métricas con gráficos de área, abierto en una notebook.",
-      "cifras-rendimiento":
-        "Pantalla con cifras de rendimiento: costo por conversión y puntaje de calidad.",
       "esquema-tablet":
         "Esquema de una página dibujado en una tableta: encabezado, bloques y pie.",
       "paleta-color":
@@ -458,7 +446,6 @@ export const es = {
     identity: "Identidad FluxWeb",
     contact: "Contacto",
     backToTop: "Volver arriba",
-    dock: "Accesos directos",
     code: "Código del sitio",
   },
 

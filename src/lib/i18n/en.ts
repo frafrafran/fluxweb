@@ -56,13 +56,6 @@ export const en: Dictionary = {
 
   hero: {
     eyebrow: "Design and development studio",
-    rotating: [
-      "custom websites",
-      "online stores",
-      "bookings and appointments",
-      "catalogs",
-      "automations",
-    ],
     titleStart: "The website your",
     titleMid: "business",
     titleEm: "deserves",
@@ -128,7 +121,6 @@ export const en: Dictionary = {
   work: {
     title: "The latest things we built.",
     seeSite: "Visit site",
-    open: "Open {name}",
     openAria: "Visit the {name} website in a new tab",
     status: { preview: "Preview", live: "Live" },
     projects: {
@@ -142,7 +134,7 @@ export const en: Dictionary = {
           "WhatsApp inquiries",
         ],
         imageAlt:
-          "Mirande Aybar homepage: a photograph of the hills at sunrise with the headline Houses, land and plots.",
+          "Mirande Aybar homepage: the agency's name in large letters over a photograph of Villa General Belgrano, with the church tower and rooftops among the trees.",
       },
       beclean: {
         sector: "Cleaning laboratory · PYAM",
@@ -154,7 +146,7 @@ export const en: Dictionary = {
           "Quote request",
         ],
         imageAlt:
-          "BeClean homepage: a dark background with the headline Clean today, caring for tomorrow, and an effervescent tablet.",
+          "BeClean homepage: a dark background with the headline Clean today, caring for tomorrow, and an effervescent tablet surrounded by bubbles.",
       },
     },
   },
@@ -294,7 +286,7 @@ export const en: Dictionary = {
   gallery: {
     eyebrow: "References",
     title: "The bar we set ourselves.",
-    body: "Web design we consider well made: typography with intent, room to breathe, one idea per screen. These aren't our projects — ours are further up — they're what we measure our own work against.",
+    body: "Sketches, wireframes, palettes and screens: the craft behind a well-made site. These aren't our projects — ours are further up — they're reference images.",
     expand: "Enlarge",
     close: "Close",
     prev: "Previous image",
@@ -307,13 +299,9 @@ export const en: Dictionary = {
         "Monitor, tablet and phone showing a landing page design.",
       "portada-oscura":
         "Dark-mode course website homepage, open in a design editor.",
-      "sitio-recetas":
-        "Recipe website on a laptop, with a dish photo and generous typography.",
       "app-viajes":
         "Travel app on a phone, with destination cards on the screen behind it.",
       "tablero-metricas": "Metrics dashboard with area charts, open on a laptop.",
-      "cifras-rendimiento":
-        "Screen showing performance figures: cost per conversion and quality score.",
       "esquema-tablet":
         "Page wireframe drawn on a tablet: header, blocks and footer.",
       "paleta-color": "Design desk with colour swatches and a graphics tablet.",
@@ -445,7 +433,6 @@ export const en: Dictionary = {
     identity: "FluxWeb identity",
     contact: "Contact",
     backToTop: "Back to top",
-    dock: "Shortcuts",
     code: "Site source code",
   },
 

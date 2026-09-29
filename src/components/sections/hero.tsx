@@ -2,14 +2,16 @@ import { ArrowRight, ArrowDown } from "@phosphor-icons/react/dist/ssr";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { MaskReveal, RiseIn } from "@/components/ui/reveal";
-import { Magnetic } from "@/components/motion-primitives/magnetic";
-import { CtaGlow, HeroEyebrow } from "@/components/sections/hero-accents";
 import { getContent } from "@/lib/i18n/server";
 
 /**
  * Portada: una sola cosa por vez. El titular ocupa todo el ancho, como en los
  * estudios que se usaron de referencia (Pentagram, Locomotive, Huge), y el
  * trabajo aparece justo abajo, en el Showreel y en Trabajos.
+ *
+ * Es entera de servidor: el movimiento lo pone el titular al entrar, no la
+ * interfaz. Sin botones magnéticos ni halos en bucle, que además seguían
+ * moviéndose con «reducir movimiento».
  */
 export async function Hero() {
   const { t } = await getContent();
@@ -23,7 +25,7 @@ export async function Hero() {
       />
 
       <Container size="wide" className="relative">
-        <HeroEyebrow />
+        <p className="text-eyebrow">{t.hero.eyebrow}</p>
 
         <h1 className="mt-6 font-display text-hero font-medium text-ink lg:mt-8">
           <MaskReveal delay={0.05}>{t.hero.titleStart}</MaskReveal>
@@ -44,21 +46,13 @@ export async function Hero() {
 
           <RiseIn delay={0.4} className="lg:col-span-6 lg:justify-self-end">
             <div className="flex flex-wrap items-center gap-x-8 gap-y-5">
-              <Magnetic intensity={0.35} range={110} actionArea="self">
-                {/* El halo late detrás del botón, con los verdes de la marca
-                    y sin interceptar el clic. */}
-                <div className="relative w-fit">
-                  <CtaGlow />
-                  <Button
-                    href="#contacto"
-                    size="lg"
-                    className="relative"
-                    icon={<ArrowRight size={18} weight="bold" aria-hidden="true" />}
-                  >
-                    {t.hero.cta}
-                  </Button>
-                </div>
-              </Magnetic>
+              <Button
+                href="#contacto"
+                size="lg"
+                icon={<ArrowRight size={18} weight="bold" aria-hidden="true" />}
+              >
+                {t.hero.cta}
+              </Button>
               {/* Atajo a la prueba: enlace de texto, no un segundo botón que
                   compita con el principal. */}
               <a

@@ -498,8 +498,18 @@ html.lenis body {
   overscroll-behavior: contain;
 }
 
-.lenis.lenis-stopped {
-  overflow: hidden;
+/* Con autoToggle, Lenis se detiene solo cuando <html> pasa a overflow:hidden
+   (galería ampliada, menú del teléfono) y vuelve con el transitionend de esta
+   transición discreta. Por eso la regla de «detenido» no puede fijar el
+   overflow cuando autoToggle está activo: la página quedaría trabada. */
+.lenis.lenis-autoToggle {
+  transition-property: overflow;
+  transition-duration: 1ms;
+  transition-behavior: allow-discrete;
+}
+
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
 }
 
 @media (prefers-reduced-motion: reduce) {
