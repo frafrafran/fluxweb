@@ -68,8 +68,7 @@ export async function Services() {
               </p>
               <Points items={[...sitios.points]} />
               <p className="mt-auto pt-10 text-sm text-muted">
-                Cada proyecto se programa desde cero: sin constructores
-                visuales, sin código heredado que nadie entiende.
+                {t.services.note}
               </p>
             </div>
           </Reveal>

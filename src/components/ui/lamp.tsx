@@ -23,15 +23,17 @@ export function LampContainer({
 }) {
   const reduce = useReducedMotion();
 
-  const grow = (from: string, to: string) =>
-    reduce
-      ? { width: to }
-      : {
-          initial: { opacity: 0.5, width: from },
-          whileInView: { opacity: 1, width: to },
-          viewport: { once: true, amount: 0.3 },
-          transition: { delay: 0.2, duration: 0.9, ease: "easeInOut" as const },
-        };
+  /* whileInView se mantiene siempre: «reducir movimiento» se conoce después
+     de hidratar, cuando el estado inicial ya está montado. Si se quitara, la
+     luz quedaría a medio abrir; con duración 0 salta directo al final. */
+  const grow = (from: string, to: string) => ({
+    initial: reduce ? false : { opacity: 0.5, width: from },
+    whileInView: { opacity: 1, width: to },
+    viewport: { once: true, amount: 0.3 },
+    transition: reduce
+      ? { duration: 0 }
+      : { delay: 0.2, duration: 0.9, ease: "easeInOut" as const },
+  });
 
   return (
     <div
@@ -99,7 +101,9 @@ export function LampContainer({
         <div className="absolute inset-auto z-40 h-44 w-full -translate-y-[12.5rem] bg-[#1b1d13]" />
       </div>
 
-      <div className="relative z-50 flex -translate-y-56 flex-col items-center px-5 text-center sm:-translate-y-64">
+      {/* El texto va debajo del haz, no dentro: sobre la zona más clara de la
+          luz la crema bajaba a 1,7:1 de contraste. */}
+      <div className="relative z-50 flex -translate-y-32 flex-col items-center px-5 text-center sm:-translate-y-36">
         {children}
       </div>
     </div>

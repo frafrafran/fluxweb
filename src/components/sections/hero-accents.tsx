@@ -3,9 +3,7 @@
 import { useRef } from "react";
 import { useInView } from "motion/react";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
-import { FluxKnot } from "@/components/brand/flux-knot";
 import { TextLoop } from "@/components/motion-primitives/text-loop";
-import { SpinningText } from "@/components/motion-primitives/spinning-text";
 import { GlowEffect } from "@/components/motion-primitives/glow-effect";
 import { useContent } from "@/lib/i18n/client";
 
@@ -40,35 +38,6 @@ export function HeroEyebrow() {
             <span key={item}>{item}</span>
           ))}
         </TextLoop>
-      )}
-    </div>
-  );
-}
-
-/**
- * Sello de marca al pie de la columna de texto.
- * El símbolo se traza solo y el nombre gira alrededor, como el cuño de un
- * afiche. Es decorativo: no aporta información que no esté en otro lado.
- */
-export function HeroSeal() {
-  const reduce = useReducedMotion();
-  const { t } = useContent();
-
-  return (
-    <div
-      aria-hidden="true"
-      className="relative mt-16 hidden h-32 w-32 items-center justify-center xl:flex"
-    >
-      <FluxKnot drawing className="h-16 w-auto text-accent opacity-[0.55]" />
-      {reduce ? null : (
-        <SpinningText
-          duration={26}
-          radius={5.6}
-          fontSize={0.68}
-          className="absolute inset-0 m-auto text-muted"
-        >
-          {t.hero.seal}
-        </SpinningText>
       )}
     </div>
   );

@@ -68,8 +68,7 @@ export function Automation() {
               {t.automation.title}
             </h2>
             <p className="mt-5 max-w-[38ch] text-lg leading-relaxed text-muted">
-              Elegí lo que más te suene. Del otro lado está la automatización
-              que armaríamos para tu negocio.
+              {t.automation.body}
             </p>
 
             <div

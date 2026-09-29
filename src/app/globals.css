@@ -191,21 +191,35 @@
 
 @layer utilities {
   /* Escalas tipográficas fluidas: una sola fuente de verdad para el display. */
+  /* Un solo pico deliberado por página, para frases de pocas palabras
+     («Sin letra chica.»), en lugar de una escalera pareja de tamaños. */
   .text-display-xl {
-    font-size: clamp(2.7rem, 7vw, 6rem);
-    line-height: 0.98;
-    letter-spacing: -0.022em;
+    font-size: clamp(3rem, 8vw, 7.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.028em;
   }
 
-  /* Escala exclusiva del hero: se calcula para que cada línea entre entera. */
+  /* Escala exclusiva del hero, a todo el ancho. Calibrada con Playfair 500:
+     «emprendimiento merece.» entra en una línea desde 768 px, y a 300 px
+     «emprendimiento» todavía no se corta. */
   .text-hero {
-    font-size: clamp(2rem, 5.2vw, 4.25rem);
-    line-height: 1.02;
-    letter-spacing: -0.024em;
+    font-size: clamp(2.25rem, 8vw, 8rem);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
   }
 
+  /* En el teléfono el titular corta en tres líneas y tiene aire para crecer
+     más rápido que el 8vw de escritorio, sin cortar la palabra más larga. */
+  @media (max-width: 639px) {
+    .text-hero {
+      font-size: clamp(2.25rem, 10vw, 3rem);
+    }
+  }
+
+  /* Los H2: por debajo del hero (1,3 veces a 1440) y siguen siendo texto
+     grande para WCAG en el teléfono (32 px). */
   .text-display-lg {
-    font-size: clamp(2.1rem, 4.6vw, 3.9rem);
+    font-size: clamp(2rem, 3.6vw, 3.25rem);
     line-height: 1.04;
     letter-spacing: -0.02em;
   }
@@ -227,7 +241,7 @@
   /* Reserva de descendentes para palabras en itálica dentro de titulares. */
   .italic-safe {
     font-style: italic;
-    line-height: 1.12;
+    line-height: inherit;
     padding-bottom: 0.08em;
   }
 
@@ -332,10 +346,14 @@ html.js .rise {
   }
 }
 
+/* Con interlineado de 0,95 los descendentes (la «y», la «p») bajan de la caja
+   de línea: el relleno los deja dentro del recorte y el margen negativo
+   devuelve el espacio. */
 .mask-line {
   display: block;
   overflow: hidden;
-  padding-bottom: 0.08em;
+  padding-bottom: 0.18em;
+  margin-bottom: -0.1em;
 }
 
 .mask-line > span {

@@ -71,25 +71,22 @@ export const es = {
       "Sitios a medida, tiendas y automatizaciones para negocios que ya no entran en una plantilla.",
     cta: "Empezar mi proyecto",
     secondary: "Ver trabajos",
-    seal: "flux webpages · diseño y desarrollo · ",
   },
 
   showreel: {
     eyebrow: "Así se ve",
     titleStart: "Treinta segundos",
-    titleEnd: "de trabajo real.",
+    titleEnd: "del estudio en movimiento.",
     hint: "Seguí bajando",
     play: "Reproducir el video",
     pause: "Pausar el video",
     videoLabel:
-      "Muestra de trabajos de FluxWeb: pantallas de sitios, tiendas y paneles diseñados por el estudio.",
+      "Video de presentación de FluxWeb, con la identidad del estudio y pantallas de ejemplo.",
   },
 
   manifesto: {
     headline:
       "Casi nadie te escribe en el primer intento. Compara, duda y se va con el que parece más serio.",
-    p1: "Un sitio lento, prestado de una plantilla o difícil de leer en el celular no cuenta lo que hacés bien. La decisión se toma en treinta segundos y casi siempre sin preguntarte nada.",
-    p2: "Del otro lado pasa algo parecido: responder lo mismo diez veces, copiar datos a una planilla, armar cada presupuesto a mano. Son las horas que te faltan para vender.",
   },
 
   services: {
@@ -272,7 +269,7 @@ export const es = {
           "Se calcula el precio con tus reglas y tu lista actualizada",
           "Sale el PDF firmado a su correo y queda registrado",
         ],
-        result: "De cuarenta minutos por presupuesto a una revisión rápida.",
+        result: "Del presupuesto armado a mano a una revisión rápida.",
       },
       turnos: {
         pain: "Coordino turnos por WhatsApp",

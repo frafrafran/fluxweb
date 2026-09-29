@@ -82,7 +82,6 @@ heredados de react-aria, `setState` de montaje) están declaradas en
 | MorphingPopover | atajo de contacto del encabezado |
 | TextLoop | antetítulo de la portada |
 | GlowEffect | halo del botón principal |
-| SpinningText | sello de marca al pie de la portada |
 | Tilt | tarjetas de proyecto |
 | Cursor | rótulo que sigue al puntero sobre cada proyecto |
 | TextEffect | titular de la banda oscura |
@@ -97,9 +96,10 @@ heredados de react-aria, `setState` de montaje) están declaradas en
 | TextScramble | código de error de la página 404 |
 | InView | entrada escalonada de las capturas de la galería |
 
-Siete quedaron sin usar: `accordion`, `disclosure`, `dialog`,
-`image-comparison`, `animated-group`, `animated-number` y `text-roll`, más
-`text-shimmer-wave`. Siguen en la carpeta y no pesan en el bundle, porque nada
+Ocho quedaron sin usar: `accordion`, `disclosure`, `dialog`,
+`image-comparison`, `animated-group`, `animated-number`, `text-roll` y
+`spinning-text` (el sello de la portada se quitó para que el titular ocupe
+todo el ancho), más `text-shimmer-wave`. Siguen en la carpeta y no pesan en el bundle, porque nada
 los importa. Cuatro se descartaron por motivos concretos:
 
 - **`accordion` y `disclosure`** habrían reemplazado el `<details>` nativo de

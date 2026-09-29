@@ -17,12 +17,18 @@ export function PromiseBand() {
   return (
     <section aria-label={t.promise.aria}>
       <LampContainer>
+        {/* Con «reducir movimiento» la transición dura 0: la preferencia se
+            conoce después de hidratar, cuando el estado inicial ya se montó. */}
         <motion.h2
           initial={reduce ? false : { opacity: 0.5, y: 80 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.4 }}
-          transition={{ delay: 0.25, duration: 0.8, ease: "easeInOut" }}
-          className="max-w-[18ch] font-display text-display-lg font-medium text-[#f0e9d6]"
+          transition={
+            reduce
+              ? { duration: 0 }
+              : { delay: 0.25, duration: 0.8, ease: "easeInOut" }
+          }
+          className="max-w-[18ch] font-display text-display-xl font-medium text-[#f0e9d6]"
         >
           {t.promise.title}
         </motion.h2>
@@ -30,7 +36,11 @@ export function PromiseBand() {
           initial={reduce ? false : { opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.4 }}
-          transition={{ delay: 0.45, duration: 0.7, ease: "easeInOut" }}
+          transition={
+            reduce
+              ? { duration: 0 }
+              : { delay: 0.45, duration: 0.7, ease: "easeInOut" }
+          }
           className="mt-6 max-w-[52ch] text-lg leading-relaxed text-[#c3c4ac]"
         >
           {t.promise.body}

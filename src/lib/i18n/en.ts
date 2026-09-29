@@ -70,25 +70,22 @@ export const en: Dictionary = {
       "Custom websites, stores and automations for businesses that no longer fit in a template.",
     cta: "Start my project",
     secondary: "See our work",
-    seal: "flux webpages · design and development · ",
   },
 
   showreel: {
     eyebrow: "What it looks like",
     titleStart: "Thirty seconds",
-    titleEnd: "of real work.",
+    titleEnd: "of the studio in motion.",
     hint: "Keep scrolling",
     play: "Play the video",
     pause: "Pause the video",
     videoLabel:
-      "FluxWeb showreel: screens from websites, stores and dashboards designed by the studio.",
+      "FluxWeb presentation video, with the studio's identity and sample screens.",
   },
 
   manifesto: {
     headline:
       "Almost nobody writes to you on the first try. They compare, hesitate, and go with whoever looks more serious.",
-    p1: "A slow site, borrowed from a template or hard to read on a phone, doesn't tell what you do well. The decision takes thirty seconds and is almost always made without asking you anything.",
-    p2: "Something similar happens on your side: answering the same thing ten times, copying data into a spreadsheet, building every quote by hand. Those are the hours you're missing to sell.",
   },
 
   services: {
@@ -262,7 +259,7 @@ export const en: Dictionary = {
           "The price is calculated with your rules and your current price list",
           "A signed PDF goes to their inbox and gets logged",
         ],
-        result: "From forty minutes per quote to a quick review.",
+        result: "From quotes built by hand to a quick review.",
       },
       turnos: {
         pain: "I schedule appointments over WhatsApp",
