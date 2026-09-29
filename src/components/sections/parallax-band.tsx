@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useReducedMotion } from "motion/react";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { FluxKnot } from "@/components/brand/flux-knot";
 import { useContent } from "@/lib/i18n/client";
 

@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { useInView, useReducedMotion } from "motion/react";
+import { useInView } from "motion/react";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { TextEffect } from "@/components/motion-primitives/text-effect";
 
 const CLASES = "mx-auto max-w-[16ch] font-display text-display-lg font-medium";

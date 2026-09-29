@@ -3,11 +3,11 @@
 import { useRef } from "react";
 import {
   motion,
-  useReducedMotion,
   useScroll,
   useTransform,
   type MotionValue,
 } from "motion/react";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 
 /** Opacidad de la palabra que todavía no se leyó. 0.55 sobre el papel de la
  *  marca da 3.5:1, así que el texto apagado sigue siendo legible si alguien

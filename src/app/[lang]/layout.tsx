@@ -17,6 +17,7 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { RevealObserver } from "@/components/ui/reveal-observer";
 import { SmoothScroll } from "@/components/ui/smooth-scroll";
+import { MotionPreferences } from "@/components/ui/motion-preferences";
 import "../globals.css";
 
 const geistSans = Geist({
@@ -153,24 +154,26 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd(locale)) }}
         />
         <LocaleProvider locale={locale}>
-          <a
-            href="#contenido"
-            className="sr-only rounded-full focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:bg-accent focus:px-5 focus:py-3 focus:text-sm focus:font-medium focus:text-accent-ink"
-          >
-            {t.nav.skip}
-          </a>
-          <SiteHeader />
-          {/* Transición entre rutas: la portada y la página de marca se
-              encadenan en vez de cortar en seco. */}
-          <ViewTransition>
-            <main id="contenido" className="flex-1">
-              {children}
-            </main>
-          </ViewTransition>
-          <SiteFooter />
-          <div className="grain" aria-hidden="true" />
-          <RevealObserver />
-          <SmoothScroll />
+          <MotionPreferences>
+            <a
+              href="#contenido"
+              className="sr-only rounded-full focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:bg-accent focus:px-5 focus:py-3 focus:text-sm focus:font-medium focus:text-accent-ink"
+            >
+              {t.nav.skip}
+            </a>
+            <SiteHeader />
+            {/* Transición entre rutas: la portada y la página de marca se
+                encadenan en vez de cortar en seco. */}
+            <ViewTransition>
+              <main id="contenido" className="flex-1">
+                {children}
+              </main>
+            </ViewTransition>
+            <SiteFooter />
+            <div className="grain" aria-hidden="true" />
+            <RevealObserver />
+            <SmoothScroll />
+          </MotionPreferences>
         </LocaleProvider>
       </body>
     </html>

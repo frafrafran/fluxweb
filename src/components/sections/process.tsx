@@ -4,11 +4,11 @@ import { useRef, useState } from "react";
 import {
   motion,
   useMotionValueEvent,
-  useReducedMotion,
   useScroll,
   useTransform,
   type MotionValue,
 } from "motion/react";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { Container } from "@/components/ui/container";
 import { SlidingNumber } from "@/components/motion-primitives/sliding-number";
 import { Spotlight } from "@/components/motion-primitives/spotlight";

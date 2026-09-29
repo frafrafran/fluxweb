@@ -1,6 +1,6 @@
 "use client";
 
-import { useReducedMotion } from "motion/react";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { TextScramble } from "@/components/motion-primitives/text-scramble";
 import { useContent } from "@/lib/i18n/client";
 

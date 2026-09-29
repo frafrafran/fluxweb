@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { useInView, useReducedMotion } from "motion/react";
+import { useInView } from "motion/react";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { FluxKnot } from "@/components/brand/flux-knot";
 import { TextLoop } from "@/components/motion-primitives/text-loop";
 import { SpinningText } from "@/components/motion-primitives/spinning-text";

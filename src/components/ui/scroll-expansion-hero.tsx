@@ -5,10 +5,10 @@ import {
   motion,
   useInView,
   useMotionValueEvent,
-  useReducedMotion,
   useScroll,
   useTransform,
 } from "motion/react";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import useMeasure from "react-use-measure";
 import { Pause, Play } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";

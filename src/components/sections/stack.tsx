@@ -1,6 +1,6 @@
 "use client";
 
-import { useReducedMotion } from "motion/react";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import useMeasure from "react-use-measure";
 import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";

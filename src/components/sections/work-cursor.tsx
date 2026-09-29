@@ -1,6 +1,6 @@
 "use client";
 
-import { useReducedMotion } from "motion/react";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { Cursor } from "@/components/motion-primitives/cursor";
 
 /**

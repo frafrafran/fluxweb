@@ -5,9 +5,9 @@ import {
   AnimatePresence,
   motion,
   useMotionValueEvent,
-  useReducedMotion,
   useScroll,
 } from "motion/react";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import {
   CaretDown,
   EnvelopeSimple,

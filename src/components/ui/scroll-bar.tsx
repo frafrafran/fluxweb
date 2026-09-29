@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion, useScroll } from "motion/react";
+import { motion, useScroll } from "motion/react";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { ScrollProgress } from "@/components/motion-primitives/scroll-progress";
 
 /**

@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import { useRef } from "react";
-import { motion, useInView, useReducedMotion } from "motion/react";
+import { motion, useInView } from "motion/react";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 
 /**
  * Grilla de capturas inclinada en 3D.

@@ -301,7 +301,9 @@ function CarouselContent({
         x: disableDrag ? undefined : dragX,
       }}
       animate={{
-        translateX: `-${index * (100 / visibleItemsCount)}%`,
+        /* Con el carrusel oculto (display:none) no hay ítems visibles y la
+           división daba -NaN%. */
+        translateX: `-${index * (100 / Math.max(1, visibleItemsCount))}%`,
       }}
       onDragEnd={disableDrag ? undefined : onDragEnd}
       transition={

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { useReducedMotion } from "motion/react";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
