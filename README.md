@@ -12,7 +12,7 @@ Presenta el trabajo del equipo y recibe consultas de nuevos proyectos.
 | Estilos | Tailwind CSS v4 con tokens propios en `src/app/globals.css` |
 | Movimiento | CSS para las apariciones, `motion` en las islas, `lenis` para el scroll, `gsap` para el parallax por capas |
 | Componentes animados | [Motion Primitives](https://motion-primitives.com) (MIT), copiados al repo en `src/components/motion-primitives/` |
-| 3D | `three` + `three-globe` + `@react-three/fiber` + `@react-three/drei`, solo en la sección de alcance |
+| Globo | [`cobe`](https://github.com/shuding/cobe) (MIT, ~13 KB, sin dependencias), solo en la sección de alcance |
 | Iconos | `@phosphor-icons/react` (import desde `dist/ssr` en los componentes de servidor) |
 | Tipografía | Playfair Display, Geist y Geist Mono vía `next/font` |
 
@@ -33,8 +33,7 @@ licencia:
 | Motion Primitives | MIT | 33 componentes copiados al repo (ver más abajo) |
 | Magic UI | MIT | la idea del texto que se enciende palabra por palabra |
 | React Bits | MIT + Commons Clause | referencia de interacciones |
-| Aceternity UI | propietaria, de pago | patrones reimplementados: foco que sigue al cursor, marquee 3D, lámpara cenital, globo y menú desplegable |
-| Natural Earth | dominio público | polígonos de países del globo (`src/data/globe.json`) |
+| Aceternity UI | propietaria, de pago | patrones reimplementados: foco que sigue al cursor, marquee 3D, lámpara cenital y menú desplegable |
 | GSAP | licencia estándar sin cargo | parallax por capas |
 
 ## Motion Primitives
@@ -237,10 +236,14 @@ crear su diccionario y registrarlo en `dictionaries` dentro de `content.ts`.
   hero se dibuja a sí mismo al cargar.
 - **Scroll suavizado con Lenis**, apagado por completo si el sistema pide menos
   movimiento. Las transiciones entre rutas usan `ViewTransition` de React.
-- **El globo es lo más pesado del sitio** (three.js más los polígonos de
-  países). Por eso se descarga recién cuando la sección entra en pantalla, y
-  nunca si el sistema pide menos movimiento. Si el navegador no puede crear el
-  contexto WebGL, `WebGLBoundary` muestra la alternativa estática.
+- **El globo usa cobe**, no three.js: pasó de 622 KB comprimidos a unos 5 KB.
+  Igual se carga recién cuando la sección se acerca a la pantalla, porque crea
+  un contexto WebGL, y solo dibuja mientras está visible. Con «reducir
+  movimiento» se dibuja quieto. Si el navegador no puede crear el contexto
+  WebGL, `WebGLBoundary` muestra la alternativa estática.
+- **«Reducir movimiento» se lee con `src/lib/use-reduced-motion.ts`**, no con
+  el hook de Motion: el de Motion lee la preferencia en el primer render del
+  cliente y rompe la hidratación (error #418) cuando está activada.
 - **Las capturas de la banda 3D y de la galería** salen de los sitios
   publicados. Para sumar un proyecto: capturas en `public/work/vistas` y
   entradas en `workViews` y `galleryColumns` dentro de `src/lib/site.ts`.

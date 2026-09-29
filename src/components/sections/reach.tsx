@@ -2,162 +2,68 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
-import { useReducedMotion } from "motion/react";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { Container } from "@/components/ui/container";
 import { WebGLBoundary } from "@/components/ui/webgl-boundary";
 import { Reveal } from "@/components/ui/reveal";
-import type { Arc } from "@/components/ui/globe";
+import type { Arc, Marker, Rgb } from "@/components/ui/globe";
 import { useContent } from "@/lib/i18n/client";
 
-/* three.js pesa: solo se descarga cuando la sección entra en pantalla. */
+/* El globo pesa poco, pero crea un contexto WebGL: se carga cuando la sección
+   se acerca a la pantalla, no antes. */
 const World = dynamic(
   () => import("@/components/ui/globe").then((module) => module.World),
   { ssr: false },
 );
 
-const CORDOBA = { lat: -31.42, lng: -64.18 };
-const BUENOS_AIRES = { lat: -34.6, lng: -58.38 };
+type LatLng = [number, number];
 
-const CREAM = "#f0e9d6";
-const OLIVE = "#b9bd7a";
-const SAND = "#d8d3ab";
+const CORDOBA: LatLng = [-31.42, -64.18];
+const BUENOS_AIRES: LatLng = [-34.6, -58.38];
+
+/** Color de la marca en el formato de cobe: canales de 0 a 1. */
+function rgb(hex: string): Rgb {
+  const value = Number.parseInt(hex.slice(1), 16);
+  return [(value >> 16) / 255, ((value >> 8) & 255) / 255, (value & 255) / 255];
+}
+
+const CREAM = rgb("#f0e9d6");
+const OLIVE = rgb("#b9bd7a");
+const SAND = rgb("#d8d3ab");
+
+const globeColors = {
+  base: rgb("#5a5c44"),
+  glow: rgb("#3a3c2a"),
+  marker: OLIVE,
+  arc: CREAM,
+};
 
 /**
  * Destinos reales y potenciales del estudio: el trabajo se entrega a
  * distancia, así que el origen siempre es Argentina.
  */
 const arcs: Arc[] = [
-  {
-    order: 1,
-    startLat: CORDOBA.lat,
-    startLng: CORDOBA.lng,
-    endLat: -31.98,
-    endLng: -64.55,
-    arcAlt: 0.05,
-    color: OLIVE,
-  },
-  {
-    order: 1,
-    startLat: CORDOBA.lat,
-    startLng: CORDOBA.lng,
-    endLat: BUENOS_AIRES.lat,
-    endLng: BUENOS_AIRES.lng,
-    arcAlt: 0.08,
-    color: CREAM,
-  },
-  {
-    order: 2,
-    startLat: BUENOS_AIRES.lat,
-    startLng: BUENOS_AIRES.lng,
-    endLat: -33.45,
-    endLng: -70.67,
-    arcAlt: 0.12,
-    color: SAND,
-  },
-  {
-    order: 2,
-    startLat: CORDOBA.lat,
-    startLng: CORDOBA.lng,
-    endLat: -34.9,
-    endLng: -56.16,
-    arcAlt: 0.1,
-    color: OLIVE,
-  },
-  {
-    order: 3,
-    startLat: BUENOS_AIRES.lat,
-    startLng: BUENOS_AIRES.lng,
-    endLat: -23.55,
-    endLng: -46.63,
-    arcAlt: 0.18,
-    color: CREAM,
-  },
-  {
-    order: 3,
-    startLat: CORDOBA.lat,
-    startLng: CORDOBA.lng,
-    endLat: 19.43,
-    endLng: -99.13,
-    arcAlt: 0.4,
-    color: SAND,
-  },
-  {
-    order: 4,
-    startLat: BUENOS_AIRES.lat,
-    startLng: BUENOS_AIRES.lng,
-    endLat: 40.42,
-    endLng: -3.7,
-    arcAlt: 0.5,
-    color: OLIVE,
-  },
-  {
-    order: 4,
-    startLat: CORDOBA.lat,
-    startLng: CORDOBA.lng,
-    endLat: 25.76,
-    endLng: -80.19,
-    arcAlt: 0.45,
-    color: CREAM,
-  },
-  {
-    order: 5,
-    startLat: BUENOS_AIRES.lat,
-    startLng: BUENOS_AIRES.lng,
-    endLat: 51.51,
-    endLng: -0.13,
-    arcAlt: 0.55,
-    color: SAND,
-  },
-  {
-    order: 5,
-    startLat: CORDOBA.lat,
-    startLng: CORDOBA.lng,
-    endLat: 41.39,
-    endLng: 2.17,
-    arcAlt: 0.52,
-    color: OLIVE,
-  },
-  {
-    order: 6,
-    startLat: BUENOS_AIRES.lat,
-    startLng: BUENOS_AIRES.lng,
-    endLat: 4.71,
-    endLng: -74.07,
-    arcAlt: 0.3,
-    color: CREAM,
-  },
-  {
-    order: 6,
-    startLat: CORDOBA.lat,
-    startLng: CORDOBA.lng,
-    endLat: -12.05,
-    endLng: -77.04,
-    arcAlt: 0.25,
-    color: SAND,
-  },
+  { from: CORDOBA, to: [-31.98, -64.55], color: OLIVE },
+  { from: CORDOBA, to: BUENOS_AIRES, color: CREAM },
+  { from: BUENOS_AIRES, to: [-33.45, -70.67], color: SAND },
+  { from: CORDOBA, to: [-34.9, -56.16], color: OLIVE },
+  { from: BUENOS_AIRES, to: [-23.55, -46.63], color: CREAM },
+  { from: CORDOBA, to: [19.43, -99.13], color: SAND },
+  { from: BUENOS_AIRES, to: [40.42, -3.7], color: OLIVE },
+  { from: CORDOBA, to: [25.76, -80.19], color: CREAM },
+  { from: BUENOS_AIRES, to: [51.51, -0.13], color: SAND },
+  { from: CORDOBA, to: [41.39, 2.17], color: OLIVE },
+  { from: BUENOS_AIRES, to: [4.71, -74.07], color: CREAM },
+  { from: CORDOBA, to: [-12.05, -77.04], color: SAND },
 ];
 
-const globeConfig = {
-  pointSize: 3,
-  globeColor: "#2b2d1f",
-  showAtmosphere: true,
-  atmosphereColor: "#f0e9d6",
-  atmosphereAltitude: 0.12,
-  emissive: "#1b1c12",
-  emissiveIntensity: 0.22,
-  shininess: 0.85,
-  polygonColor: "rgba(240,233,214,0.8)",
-  ambientLight: "#b9bd7a",
-  directionalLeftLight: "#f0e9d6",
-  directionalTopLight: "#f0e9d6",
-  pointLight: "#f0e9d6",
-  arcTime: 1800,
-  arcLength: 0.9,
-  rings: 1,
-  maxRings: 3,
-  autoRotate: true,
-  autoRotateSpeed: 0.45,
-};
+/** Los dos orígenes más marcados que los destinos. */
+const markers: Marker[] = [
+  ...[CORDOBA, BUENOS_AIRES].map((location) => ({ location, size: 0.06 })),
+  ...arcs
+    .filter((arc) => arc.to !== BUENOS_AIRES)
+    .map((arc) => ({ location: arc.to, size: 0.03 })),
+];
 
 export function Reach() {
   const ref = useRef<HTMLDivElement>(null);
@@ -203,12 +109,20 @@ export function Reach() {
         ref={ref}
         className="relative mx-auto -mt-4 h-[22rem] w-full max-w-5xl sm:h-[26rem] lg:h-[34rem]"
       >
-        {visible && !reduce ? (
+        {visible ? (
           <WebGLBoundary fallback={<StaticGlobe />}>
-            <World globeConfig={globeConfig} data={arcs} />
+            {/* Con «reducir movimiento» el globo se dibuja quieto. */}
+            <World
+              arcs={arcs}
+              markers={markers}
+              longitude={-52}
+              theta={-0.22}
+              colors={globeColors}
+              still={!!reduce}
+            />
           </WebGLBoundary>
         ) : (
-          /* Sin movimiento o antes de entrar en pantalla: no se descarga three.js. */
+          /* Antes de acercarse a la pantalla, y sin JavaScript. */
           <StaticGlobe />
         )}
       </div>

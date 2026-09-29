@@ -1,268 +1,214 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Canvas, extend, useThree } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
-import { Color, Fog, PerspectiveCamera, Scene, Vector3 } from "three";
-import ThreeGlobe from "three-globe";
-import countries from "@/data/globe.json";
+import { useEffect, useRef } from "react";
+import createGlobe, { type Arc, type Marker } from "cobe";
 
-extend({ ThreeGlobe });
+export type { Arc, Marker };
+export type Rgb = [number, number, number];
 
-const RING_SPEED = 3;
-const ASPECT = 1.2;
-const CAMERA_Z = 300;
+/** Velocidad del giro, en radianes por milisegundo: una vuelta cada ~50 s. */
+const GIRO = 0.000125;
 
-export type Arc = {
-  order: number;
-  startLat: number;
-  startLng: number;
-  endLat: number;
-  endLng: number;
-  arcAlt: number;
-  color: string;
-};
-
-export type GlobeConfig = {
-  pointSize?: number;
-  globeColor?: string;
-  showAtmosphere?: boolean;
-  atmosphereColor?: string;
-  atmosphereAltitude?: number;
-  emissive?: string;
-  emissiveIntensity?: number;
-  shininess?: number;
-  polygonColor?: string;
-  ambientLight?: string;
-  directionalLeftLight?: string;
-  directionalTopLight?: string;
-  pointLight?: string;
-  arcTime?: number;
-  arcLength?: number;
-  rings?: number;
-  maxRings?: number;
-  autoRotate?: boolean;
-  autoRotateSpeed?: number;
-};
-
-type WorldProps = { globeConfig: GlobeConfig; data: Arc[] };
-
-function Globe({ globeConfig, data }: WorldProps) {
-  const globeRef = useRef<ThreeGlobe | null>(null);
-  const groupRef = useRef<import("three").Group>(null);
-  const [ready, setReady] = useState(false);
-
-  const config = {
-    pointSize: 1,
-    atmosphereColor: "#f0e9d6",
-    showAtmosphere: true,
-    atmosphereAltitude: 0.12,
-    polygonColor: "rgba(240,233,214,0.6)",
-    globeColor: "#23251a",
-    emissive: "#1b1c12",
-    emissiveIntensity: 0.12,
-    shininess: 0.85,
-    arcTime: 2000,
-    arcLength: 0.9,
-    rings: 1,
-    maxRings: 3,
-    ...globeConfig,
-  };
-
-  useEffect(() => {
-    if (globeRef.current || !groupRef.current) return;
-    globeRef.current = new ThreeGlobe();
-    groupRef.current.add(globeRef.current);
-    setReady(true);
-  }, []);
-
-  useEffect(() => {
-    if (!globeRef.current || !ready) return;
-    const material = globeRef.current.globeMaterial() as unknown as {
-      color: Color;
-      emissive: Color;
-      emissiveIntensity: number;
-      shininess: number;
-    };
-    material.color = new Color(config.globeColor);
-    material.emissive = new Color(config.emissive);
-    material.emissiveIntensity = config.emissiveIntensity;
-    material.shininess = config.shininess;
-  }, [
-    ready,
-    config.globeColor,
-    config.emissive,
-    config.emissiveIntensity,
-    config.shininess,
-  ]);
-
-  useEffect(() => {
-    const globe = globeRef.current;
-    if (!globe || !ready || !data) return;
-
-    const points = data.flatMap((arc) => [
-      {
-        size: config.pointSize,
-        order: arc.order,
-        color: arc.color,
-        lat: arc.startLat,
-        lng: arc.startLng,
-      },
-      {
-        size: config.pointSize,
-        order: arc.order,
-        color: arc.color,
-        lat: arc.endLat,
-        lng: arc.endLng,
-      },
-    ]);
-
-    const unique = points.filter(
-      (point, index, all) =>
-        all.findIndex(
-          (other) => other.lat === point.lat && other.lng === point.lng,
-        ) === index,
-    );
-
-    globe
-      .hexPolygonsData(countries.features)
-      .hexPolygonResolution(3)
-      .hexPolygonMargin(0.72)
-      .showAtmosphere(config.showAtmosphere)
-      .atmosphereColor(config.atmosphereColor)
-      .atmosphereAltitude(config.atmosphereAltitude)
-      .hexPolygonColor(() => config.polygonColor);
-
-    globe
-      .arcsData(data)
-      .arcStartLat((d: object) => (d as Arc).startLat)
-      .arcStartLng((d: object) => (d as Arc).startLng)
-      .arcEndLat((d: object) => (d as Arc).endLat)
-      .arcEndLng((d: object) => (d as Arc).endLng)
-      .arcColor((d: object) => (d as Arc).color)
-      .arcAltitude((d: object) => (d as Arc).arcAlt)
-      .arcStroke(() => [0.32, 0.28, 0.3][Math.round(Math.random() * 2)])
-      .arcDashLength(config.arcLength)
-      .arcDashInitialGap((d: object) => (d as Arc).order)
-      .arcDashGap(15)
-      .arcDashAnimateTime(() => config.arcTime);
-
-    globe
-      .pointsData(unique)
-      .pointColor((d: object) => (d as { color: string }).color)
-      .pointsMerge(true)
-      .pointAltitude(0)
-      .pointRadius(2);
-
-    globe
-      .ringsData([])
-      .ringColor(() => config.polygonColor)
-      .ringMaxRadius(config.maxRings)
-      .ringPropagationSpeed(RING_SPEED)
-      .ringRepeatPeriod((config.arcTime * config.arcLength) / config.rings);
-  }, [
-    ready,
-    data,
-    config.pointSize,
-    config.showAtmosphere,
-    config.atmosphereColor,
-    config.atmosphereAltitude,
-    config.polygonColor,
-    config.arcLength,
-    config.arcTime,
-    config.rings,
-    config.maxRings,
-  ]);
-
-  /* Anillos que laten sobre los orígenes de cada arco. */
-  useEffect(() => {
-    if (!globeRef.current || !ready || !data) return;
-
-    const interval = setInterval(() => {
-      if (!globeRef.current) return;
-      const picked = pickIndexes(data.length, Math.ceil(data.length / 2));
-      globeRef.current.ringsData(
-        data
-          .filter((_, index) => picked.includes(index))
-          .map((arc) => ({
-            lat: arc.startLat,
-            lng: arc.startLng,
-            color: arc.color,
-          })),
-      );
-    }, 2200);
-
-    return () => clearInterval(interval);
-  }, [ready, data]);
-
-  return <group ref={groupRef} />;
-}
-
-function RendererConfig() {
-  const { gl, size } = useThree();
-
-  useEffect(() => {
-    gl.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    gl.setSize(size.width, size.height);
-    gl.setClearColor(0x000000, 0);
-  }, [gl, size.width, size.height]);
-
-  return null;
-}
+/** Píxeles de arrastre que equivalen a un radián de giro. */
+const ARRASTRE = 200;
 
 /**
- * Globo interactivo.
- * Adaptado del componente de Aceternity: misma técnica (three-globe sobre
- * react-three-fiber), pero con la paleta de FluxWeb, los polígonos de países
- * en dominio público de Natural Earth y sin rotación si el sistema pide
- * menos movimiento.
+ * Cuadros que se dibujan en el modo quieto. La textura del mapa se decodifica
+ * aparte y el primer cuadro sale sin continentes: con unos pocos más alcanza.
  */
-export function World({ globeConfig, data }: WorldProps) {
-  const scene = new Scene();
-  scene.fog = new Fog(0x23251a, 400, 2000);
+const CUADROS_QUIETO = 30;
+
+type WorldProps = {
+  arcs: Arc[];
+  markers: Marker[];
+  /** Longitud que queda al frente al empezar. */
+  longitude: number;
+  /** Inclinación en radianes: negativa muestra más del hemisferio sur. */
+  theta: number;
+  colors: { base: Rgb; glow: Rgb; marker: Rgb; arc: Rgb };
+  /** Sin giro automático, para quien pide menos movimiento. Se puede arrastrar igual. */
+  still?: boolean;
+};
+
+/**
+ * Globo de puntos con arcos, dibujado con cobe (unos 13 KB, sin
+ * dependencias) en lugar de three.js. Solo dibuja mientras está en pantalla
+ * y la pestaña está visible, y se puede girar arrastrando en horizontal: el
+ * gesto vertical queda libre para seguir haciendo scroll en el teléfono.
+ */
+export function World({
+  arcs,
+  markers,
+  longitude,
+  theta,
+  colors,
+  still = false,
+}: WorldProps) {
+  const wrap = useRef<HTMLDivElement>(null);
+  const host = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const box = wrap.current;
+    const escena = host.current;
+    if (!box || !escena) return;
+
+    /* cobe no avisa cuando falla: sin contexto devuelve un globo vacío. Se
+       comprueba antes para que WebGLBoundary muestre la alternativa. */
+    if (!supportsWebGL()) throw new Error("WebGL no disponible");
+
+    /* cobe envuelve el lienzo en un div propio y lo cambia de lugar en el
+       DOM. Por eso el lienzo se crea acá y no en el JSX: React solo es dueño
+       del contenedor vacío, y lo que cobe agrega se limpia al desmontar. */
+    const canvas = document.createElement("canvas");
+    canvas.className = "block cursor-grab touch-pan-y";
+    escena.append(canvas);
+
+    const medir = () =>
+      Math.max(1, Math.floor(Math.min(box.clientWidth, box.clientHeight)));
+    let size = medir();
+    const aplicarTamano = () => {
+      for (const nodo of [escena, canvas]) {
+        nodo.style.width = `${size}px`;
+        nodo.style.height = `${size}px`;
+      }
+    };
+    aplicarTamano();
+
+    let phi = Math.PI - ((longitude * Math.PI) / 180 - Math.PI / 2);
+    let arrastre = 0;
+    let origen = 0;
+    let puntero: number | null = null;
+
+    const globe = createGlobe(canvas, {
+      devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
+      width: size,
+      height: size,
+      phi,
+      theta,
+      dark: 1,
+      diffuse: 1.2,
+      mapSamples: 16000,
+      mapBrightness: 5,
+      baseColor: colors.base,
+      markerColor: colors.marker,
+      glowColor: colors.glow,
+      markers,
+      arcs,
+      arcColor: colors.arc,
+      arcWidth: 0.6,
+      arcHeight: 0.28,
+      markerElevation: 0.01,
+    });
+    const dibujar = () => globe.update({ phi: phi + arrastre });
+
+    let cuadro = 0;
+    let anterior = 0;
+    let restantes = CUADROS_QUIETO;
+    let enPantalla = false;
+
+    const paso = (ahora: number) => {
+      const dt = anterior ? Math.min(ahora - anterior, 64) : 16;
+      anterior = ahora;
+      if (!still && puntero === null) phi += dt * GIRO;
+      dibujar();
+      if (still && --restantes <= 0) {
+        cuadro = 0;
+        return;
+      }
+      cuadro = requestAnimationFrame(paso);
+    };
+    const arrancar = () => {
+      if (cuadro || !enPantalla || document.hidden) return;
+      if (still && restantes <= 0) return;
+      anterior = 0;
+      cuadro = requestAnimationFrame(paso);
+    };
+    const frenar = () => {
+      cancelAnimationFrame(cuadro);
+      cuadro = 0;
+    };
+
+    const observador = new IntersectionObserver(([entrada]) => {
+      enPantalla = Boolean(entrada?.isIntersecting);
+      if (enPantalla) arrancar();
+      else frenar();
+    });
+    observador.observe(canvas);
+
+    const alCambiarVisibilidad = () =>
+      document.hidden ? frenar() : arrancar();
+    document.addEventListener("visibilitychange", alCambiarVisibilidad);
+
+    const medidor = new ResizeObserver(() => {
+      const nuevo = medir();
+      if (nuevo === size) return;
+      size = nuevo;
+      aplicarTamano();
+      globe.update({ width: size, height: size, phi: phi + arrastre });
+    });
+    medidor.observe(box);
+
+    const bajar = (event: PointerEvent) => {
+      puntero = event.pointerId;
+      origen = event.clientX - arrastre * ARRASTRE;
+      canvas.setPointerCapture(event.pointerId);
+      canvas.style.cursor = "grabbing";
+    };
+    const mover = (event: PointerEvent) => {
+      if (event.pointerId !== puntero) return;
+      arrastre = (event.clientX - origen) / ARRASTRE;
+      if (!cuadro) dibujar();
+    };
+    const soltar = (event: PointerEvent) => {
+      if (event.pointerId !== puntero) return;
+      puntero = null;
+      canvas.style.cursor = "";
+    };
+    canvas.addEventListener("pointerdown", bajar);
+    canvas.addEventListener("pointermove", mover);
+    canvas.addEventListener("pointerup", soltar);
+    canvas.addEventListener("pointercancel", soltar);
+
+    /* Aparece cuando la textura ya tuvo tiempo de cargar. */
+    const aparicion = window.setTimeout(() => {
+      escena.style.opacity = "1";
+    }, 120);
+
+    return () => {
+      window.clearTimeout(aparicion);
+      frenar();
+      observador.disconnect();
+      medidor.disconnect();
+      document.removeEventListener("visibilitychange", alCambiarVisibilidad);
+      canvas.removeEventListener("pointerdown", bajar);
+      canvas.removeEventListener("pointermove", mover);
+      canvas.removeEventListener("pointerup", soltar);
+      canvas.removeEventListener("pointercancel", soltar);
+      globe.destroy();
+      escena.replaceChildren();
+      escena.style.opacity = "";
+    };
+  }, [arcs, markers, longitude, theta, colors, still]);
 
   return (
-    <Canvas
-      scene={scene}
-      camera={new PerspectiveCamera(50, ASPECT, 180, 1800)}
-      gl={{ antialias: true, alpha: true }}
-    >
-      <RendererConfig />
-      <ambientLight color={globeConfig.ambientLight} intensity={1.15} />
-      <directionalLight
-        color={globeConfig.directionalLeftLight}
-        position={new Vector3(-400, 100, 400)}
+    <div ref={wrap} className="absolute inset-0">
+      <div
+        ref={host}
+        aria-hidden="true"
+        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-1000 ease-out motion-reduce:transition-none"
       />
-      <directionalLight
-        color={globeConfig.directionalTopLight}
-        position={new Vector3(-200, 500, 200)}
-      />
-      <pointLight
-        color={globeConfig.pointLight}
-        position={new Vector3(-200, 500, 200)}
-        intensity={0.8}
-      />
-      <Globe globeConfig={globeConfig} data={data} />
-      <OrbitControls
-        enablePan={false}
-        enableZoom={false}
-        minDistance={CAMERA_Z}
-        maxDistance={CAMERA_Z}
-        autoRotate={globeConfig.autoRotate ?? true}
-        autoRotateSpeed={globeConfig.autoRotateSpeed ?? 0.5}
-        minPolarAngle={Math.PI / 3.5}
-        maxPolarAngle={Math.PI - Math.PI / 3}
-      />
-    </Canvas>
+    </div>
   );
 }
 
-/** Índices distintos al azar, para elegir qué anillos laten en cada ciclo. */
-function pickIndexes(max: number, count: number) {
-  const chosen: number[] = [];
-  while (chosen.length < Math.min(count, max)) {
-    const value = Math.floor(Math.random() * max);
-    if (!chosen.includes(value)) chosen.push(value);
+/** Prueba con un lienzo aparte y libera el contexto enseguida. */
+function supportsWebGL() {
+  try {
+    const prueba = document.createElement("canvas");
+    const contexto = prueba.getContext("webgl2") ?? prueba.getContext("webgl");
+    contexto?.getExtension("WEBGL_lose_context")?.loseContext();
+    return contexto !== null;
+  } catch {
+    return false;
   }
-  return chosen;
 }
