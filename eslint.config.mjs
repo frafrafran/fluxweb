@@ -30,6 +30,8 @@ const eslintConfig = defineConfig([
     ".open-next/**",
     ".wrangler/**",
     "cloudflare-env.d.ts",
+    // Proyecto de video aparte (Remotion), con sus propias dependencias.
+    "publicidad/**",
   ]),
 ]);
 

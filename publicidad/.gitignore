@@ -1,0 +1,4 @@
+node_modules/
+out/
+# El video de origen y el audio renderizado se regeneran; no van al repo.
+public/media/

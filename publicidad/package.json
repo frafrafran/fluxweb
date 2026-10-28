@@ -1,0 +1,22 @@
+{
+  "name": "fluxweb-publicidad",
+  "private": true,
+  "description": "Reels de FluxWeb armados con Remotion. Aparte del sitio: tiene sus propias dependencias.",
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "audio": "python audio/componer.py",
+    "render": "remotion render src/index.ts HacemosWebs out/hacemos-webs.mp4 --codec=h264 --crf=14 --pixel-format=yuv420p --audio-codec=aac --audio-bitrate=320k"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.539",
+    "@remotion/google-fonts": "4.0.539",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "remotion": "4.0.539"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.2",
+    "typescript": "5.9.3"
+  }
+}
